@@ -1,0 +1,84 @@
+body
+{
+    background-color: var(--primary-color);
+}
+
+.loginBlockContainer
+{
+    display: flex;
+    justify-content: center;
+    padding-top: 150px;
+}
+
+.loginBlock
+{
+    background-color: var(--white-color);
+    width: 400px;
+    height: 280px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    border-radius: 5px;
+}
+
+.mainText
+{
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: 'Poppins';
+    font-weight: 300;
+}
+
+.loginInputs
+{
+    border-radius: 2px;
+    background-color: var(--lighter-gray);
+}
+
+.form-control::placeholder
+{
+    font-family: 'Poppins';
+    color: var(--light-gray);
+    font-size: 14px;
+}
+
+.btnContainer
+{
+    padding-top: 30px;
+}
+
+.loginBtn 
+{
+    background-color: var(--primary-color);
+    border-radius: 3px;
+    width: 300px;
+    font-family: 'Poppins';
+    border: none;
+}
+
+.loginBtn:hover
+{
+    background-color: var(--black);
+}
+
+.loginBtn:active,
+.loginBtn:focus
+{
+    background-color: var(--black) !important;
+    outline: var(--primary-color) !important;
+    box-shadow: none !important;
+    border: 1px solid var(--primary-color);
+}
+
+.forgotPassword
+{
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    font-size: 10px;
+    color: var(--light-gray);
+    font-weight: 200;
+}
+
