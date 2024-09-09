@@ -25,5 +25,10 @@ async function logIn()
     if (resultJson.success == true)
     {
         window.location = "inicio.html";
+        console.log("certo");
+    }
+    else
+    {
+        console.log("errado");
     }
 }

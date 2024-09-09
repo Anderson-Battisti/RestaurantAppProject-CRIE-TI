@@ -3,9 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/paymentMethod.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <title>Payment Methods Manager</title>
 </head>
-<body>
-    
+<body class="body">
+    <div>
+        <div class="sidebar">
+            <a href="inicio.html">Início</a>
+            <a href="paymentMethod.html">Gerenciar Formas de Pagamento</a>
+            <a href="#">Gerenciar Produtos</a>           
+            <a href="#">Gerenciar Formas de Entrega</a>
+            <a href="#">Tela de Pedidos</a>
+            <a href="#">Gerenciar Unidades de Medida</a>
+            <a href="#">Gerenciar Usuários</a>
+            <a href="#">Gerenciar Cadastro de Clientes</a>
+        </div>
+        
+        <div class="content paymentMethodContainer">
+
+            <div class="title">
+                <h1>Lista de Formas de Pagamento</h1>
+            </div>
+            <div>
+                <div class="addMethodBtnContainer">
+                    <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Método</button>
+                </div>
+                <div class="popup">
+                    <div class="popup-content">
+                        <div>
+                            <label class="formTitle">Adicionar Método de Pagamento</label>
+                            <div class="formInputContainer">
+                                <div class="form-floating mb-3 myForm">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o nome" id="paymentName">
+                                    <label for="floatingInput">Nome</label>
+                                  </div>
+                                  <div class="form-floating">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o método" id="paymentMethod">
+                                    <label for="floatingPassword">Método</label>
+                                  </div>
+                                  <div class="form-floating">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o tipo" id="paymentType">
+                                    <label for="floatingPassword">Tipo</label>
+                                  </div>
+                            </div>
+                            <div id="popUpMessage">
+
+                            </div>
+                            <div>
+                                <button onclick="addPaymentMethod();" class="btn btn-primary saveBtn">Salvar</button>
+                            </div>
+                            <div class="closeBtnContainer">
+                                <button onclick="closePopUps()" class="btn btn-primary closeBtn">Fechar</button>
+                            </div>
+                        </div>                       
+                    </div>
+                </div>
+                <div class="popupEdit">
+                    <div class="popup-contentEdit">
+                        <div>
+                            <label class="formTitle">Editar Método de Pagamento</label>
+                            <div class="formInputContainer">
+                                <div class="form-floating mb-3 myForm">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo nome" id="editPaymentName">
+                                    <label for="floatingInput">Nome</label>
+                                  </div>
+                                  <div class="form-floating">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo método" id="editPaymentMethod">
+                                    <label for="floatingPassword">Método</label>
+                                  </div>
+                                  <div class="form-floating">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo tipo" id="editPaymentType">
+                                    <label for="floatingPassword">Tipo</label>
+                                  </div>
+                            </div>
+                            <div id="editPopUpMessage">
+
+                            </div>
+                            <div>
+                                <button onclick="editPaymentMethod();" class="btn btn-primary saveBtn">Salvar</button>
+                            </div>
+                            <div class="closeBtnContainer">
+                                <button onclick="closePopUps()" class="btn btn-primary closeBtn">Cancelar</button>
+                            </div>
+                        </div>                       
+                    </div>
+                </div>
+                <table class="table table-hover table-light myTable">
+                    <thead>
+                        <tr>
+                            <td>Ações</td>
+                            <td>ID</td>
+                            <td>Nome</td>
+                            <td>Método</td>
+                            <td>Tipo</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../javascript/paymentMethodScreen.js"></script>
+    <script>listPaymentMethods()</script>
 </body>
 </html>

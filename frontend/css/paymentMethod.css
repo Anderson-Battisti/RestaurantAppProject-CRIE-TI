@@ -1,0 +1,205 @@
+.body
+{
+    background-color: var(--black);
+}
+
+.paymentMethodContainer
+{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.title
+{
+    padding-bottom: 50px;
+}
+
+.myTable
+{
+    background-color: var(--primary-color);
+}
+
+.listBtn
+{
+    background-color: var(--black);
+    border-radius: 3px;
+    font-family: 'Poppins';
+    border: none;
+}
+
+.listBtn:hover
+{
+    background-color: var(--white-color);
+    color: var(--black);
+}
+
+.listBtn:active
+{
+    background-color: var(--white-color) !important;
+    color: var(--black) !important;
+}
+
+.listBtn:focus
+{
+    background-color: var(--white-color);
+    color: var(--black);
+    box-shadow: none;
+}
+
+.buttons
+{
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.addMethodBtnContainer
+{
+    padding-bottom: 10px;
+}
+
+.addMethodBtn
+{
+    background-color: var(--dark-yellow);
+    color: var(--black);
+    border-radius: 3px;
+    font-family: 'Poppins';
+    border: none;
+}
+
+.addMethodBtn:hover
+{
+    background-color: var(--white-color);
+    color: var(--black);
+}
+
+.addMethodBtn:focus
+{
+    background-color: var(--white-color);
+    color: var(--black);
+    box-shadow: none;
+}
+
+.popup
+{
+    background: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.popup-content
+{
+    height: 500px;
+    width: 500px;
+    background: var(--white-color);
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    color: var(--black);
+}
+
+.popupEdit
+{
+    background: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.popup-contentEdit
+{
+    height: 500px;
+    width: 500px;
+    background: var(--white-color);
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    color: var(--black);
+}
+
+.myForm
+{
+    font-family: 'Poppins';
+}
+
+.formTitle
+{
+    padding-bottom: 20px;
+}
+
+.formInputContainer
+{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+}
+
+.saveBtn
+{
+    width: 100px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 3px;
+    font-family: 'Poppins';
+    border: none;    
+}
+
+.saveBtn:hover
+{
+    background-color: var(--black);
+    color: var(--white-color);
+}
+
+.saveBtn:focus
+{
+    background-color: var(--black);
+    color: var(--white-color);
+    box-shadow: none;
+}
+
+.closeBtnContainer
+{
+    padding-top: 50px;
+}
+
+.closeBtn
+{
+    width: 100px;
+    background-color: var(--black);
+    color: var(--white-color);
+    border-radius: 3px;
+    font-family: 'Poppins';
+    border: none;
+}
+
+.closeBtn:hover
+{
+    background-color: var(--dark-yellow);
+    color: var(--white-color);
+}
+
+.closeBtn:focus
+{
+    background-color: var(--black);
+    color: var(--white-color);
+    box-shadow: none !important;
+}
+
+.closeBtn:active
+{
+    background-color: var(--dark-yellow) !important;
+    color: var(--white-color);
+    box-shadow: none !important;
+}
