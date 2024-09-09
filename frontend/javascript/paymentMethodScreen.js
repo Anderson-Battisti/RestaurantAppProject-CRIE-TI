@@ -4,24 +4,32 @@ async function listPaymentMethods()
 {
     let result = await fetch(apiUrl + "/getPaymentMethodsList");
     let paymentMethods = await result.json();
-
     let html = "";
 
-    for (let i = 0; i < paymentMethods.length; i++)
+    if (paymentMethods.length > 0)
     {
-        let paymentMethod = paymentMethods[i];
-        let editBtn = `<button onclick="openPopUpEdit(${i});" class="btn btn-primary listBtn">Editar</button>`;
-        let deleteBtn = `<button onclick="deletePaymentMethod(${i});" class="btn btn-primary listBtn">Excluir</button>`
-
-        html += `<tr>
-                    <td class="buttons">${editBtn}${deleteBtn}</td>
-                    <td>${paymentMethod.id}</td>
-                    <td>${paymentMethod.name}</td>
-                    <td>${paymentMethod.method}</td>
-                    <td>${paymentMethod.type}</td>
-                 </tr>`;
+        for (let i = 0; i < paymentMethods.length; i++)
+        {
+            let paymentMethod = paymentMethods[i];
+            let editBtn = `<button onclick="openPopUpEdit(${i});" class="btn btn-primary listBtn">Editar</button>`;
+            let deleteBtn = `<button onclick="deletePaymentMethod(${i});" class="btn btn-primary listBtn">Excluir</button>`
+            if (paymentMethod != null)
+            {
+                html += `<tr>
+                        <td class="buttons">${editBtn}${deleteBtn}</td>
+                        <td>${paymentMethod.id}</td>
+                        <td>${paymentMethod.name}</td>
+                        <td>${paymentMethod.method}</td>
+                        <td>${paymentMethod.type}</td>
+                        </tr>`;
+            } 
+        }
+        document.getElementById("tableBody").innerHTML = html;
     }
-    document.getElementById("tableBody").innerHTML = html;
+    else
+    {
+        document.getElementById("tableBody").innerHTML = ""; 
+    }   
 }
 
 async function addPaymentMethod()
@@ -94,22 +102,55 @@ async function editPaymentMethod()
         redirect : "follow"
     };
 
-    let result = await fetch(apiUrl + "/editPaymentMethod", requestOptions);
-    let resultJson = await result.json();
-
-    console.log(resultJson);
-    if (resultJson.success)
+    if (editFilledFields())
     {
-        let html = `<p style="color: green; font-family: 'Poppins'">Sucesso!</p>`
+        let result = await fetch(apiUrl + "/editPaymentMethod", requestOptions);
+        let resultJson = await result.json();
+
+        if (resultJson.success)
+        {
+            let html = `<p style="color: green; font-family: 'Poppins'">Sucesso!</p>`
+            document.getElementById("editPopUpMessage").innerHTML = html;
+    
+            setTimeout(function()
+            {closePopUps(), document.getElementById("editPopUpMessage").innerHTML = ``,
+                document.getElementById("editPaymentName").value = ``,
+                document.getElementById("editPaymentMethod").value = ``,
+                document.getElementById("editPaymentType").value = ``
+            }, 800);
+            listPaymentMethods();
+        }
+    }
+    else
+    {
+        let html = `<p style="color: red; font-family: 'Poppins'">Preencha todos os campos!</p>`
         document.getElementById("editPopUpMessage").innerHTML = html;
 
-        setTimeout(function()
-        {closePopUps(), document.getElementById("editPopUpMessage").innerHTML = ``,
-            document.getElementById("editPaymentName").value = ``,
-            document.getElementById("editPaymentMethod").value = ``,
-            document.getElementById("editPaymentType").value = ``
-        }, 800);
-        listPaymentMethods();
+        setTimeout(function(){document.getElementById("editPopUpMessage").innerHTML = ``}, 3000);
+    }
+}
+
+async function deletePaymentMethod(param)
+{
+    let id = param;
+    const url = "/deletePaymentMethod/" + param;
+    const method = {method: "DELETE", redirect: "follow"};
+
+    if (confirm("Deseja realmente excluir esse método de pagamento?"))
+    {
+        let result = await fetch(apiUrl + url, method);
+        let resultJson = await result.json();
+        console.log(resultJson);
+
+        if (resultJson.id)
+        {
+            alert("Método de pagamento excluído com sucesso.");
+            listPaymentMethods();
+        }
+        else
+        {
+            console.log("teste");
+        }
     }
 }
 
@@ -118,6 +159,24 @@ function filledFields()
     let name = document.getElementById("paymentName").value;
     let paymentMethod = document.getElementById("paymentMethod").value;
     let paymentType = document.getElementById("paymentType").value;
+
+    if (name != null && name != undefined && name != "" &&
+        paymentMethod != null && paymentMethod != undefined && paymentMethod != "" &&
+        paymentType != null && paymentType != undefined && paymentType != "")
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+function editFilledFields()
+{
+    let name = document.getElementById("editPaymentName").value;
+    let paymentMethod = document.getElementById("editPaymentMethod").value;
+    let paymentType = document.getElementById("editPaymentType").value;
 
     if (name != null && name != undefined && name != "" &&
         paymentMethod != null && paymentMethod != undefined && paymentMethod != "" &&
@@ -146,6 +205,14 @@ function closePopUps()
 {
     document.querySelector(".popup").style.display = "none";
     document.querySelector(".popupEdit").style.display = "none";
+
+    document.getElementById("paymentName").value = ``,
+    document.getElementById("paymentMethod").value = ``,
+    document.getElementById("paymentType").value = ``
+
+    document.getElementById("editPaymentName").value = ``,
+    document.getElementById("editPaymentMethod").value = ``,
+    document.getElementById("editPaymentType").value = ``
 }
 
 function getUrlParams(id)

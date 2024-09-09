@@ -76,25 +76,43 @@ server.put("/editPaymentMethod", async function (req: Request, res: Response): P
     let method = req.body.method;
     let type = req.body.type;
 
-    if (validRequisition(name, method, type) && paymentMethods.length > id)
+    if (validRequisition(name, method, type))
     {
+        console.log(validRequisition(name, method, type))
         paymentMethods[id].name = name;
         paymentMethods[id].method = method;
         paymentMethods[id].type = type;
-
+        
         return res.status(200).json({success: true, message: "Método alterado com sucesso!"});
     }
     else
     {
         return res.status(400).json({success: false, message: "Falha ao alterar método. Preencha todos os campos."});
+    }  
+});
+
+server.delete("/deletePaymentMethod/:id", async function(req: Request, res: Response): Promise<Response>
+{
+    let id = Number(req.params.id);
+
+    if (id >= 0 && id < paymentMethods.length)
+    {
+        let paymentMethod = paymentMethods[id]
+        delete paymentMethods[id];
+        return res.status(200).json(paymentMethod);
+    }
+    else
+    {
+        let erro = {"codigo": id, "message": "Ocorreu um erro ao excluir. Método de pagamento não encontrado."};
+        return res.status(404).json(erro);
     }
 });
 
 function validRequisition(name: string, method: string, type: string)
 {
-    if (name != null && name != undefined &&
-        method != null && method != undefined &&
-        type != null && type != undefined)
+    if (name != null && name != undefined && name != "" &&
+        method != null && method != undefined && method != "" &&
+        type != null && type != undefined && type != "")
     {
         return true;
     }
