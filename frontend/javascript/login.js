@@ -1,9 +1,11 @@
 const apiUrl = "http://localhost:4000";
 
-async function logIn()
+async function logIn(event)
 {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+
+    event.preventDefault();
 
     const login = JSON.stringify
     ({
