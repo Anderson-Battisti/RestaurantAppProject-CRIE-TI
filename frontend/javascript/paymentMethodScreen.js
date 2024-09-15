@@ -56,17 +56,19 @@ async function addPaymentMethod()
     {
         let result = await fetch(apiUrl + "/addPaymentMethod", requestMethod);
         let resultJson = await result.json();
-        console.log(resultJson);
+
         if (resultJson.name)
         {
             let html = `<p style="color: green; font-family: 'Poppins'">Sucesso!</p>`
             document.getElementById("popUpMessage").innerHTML = html;
+            document.getElementById("savePaymentMethodBtn").disabled = true;
 
             setTimeout(function()
             {closePopUps(), document.getElementById("popUpMessage").innerHTML = ``,
              document.getElementById("paymentName").value = ``,
              document.getElementById("paymentMethod").value = ``,
-             document.getElementById("paymentType").value = ``
+             document.getElementById("paymentType").value = ``,
+             document.getElementById("savePaymentMethodBtn").disabled = false;
             }, 800);
             listPaymentMethods();       
         }
@@ -126,6 +128,7 @@ async function editPaymentMethod()
     {
         let html = `<p style="color: red; font-family: 'Poppins'">Preencha todos os campos!</p>`
         document.getElementById("editPopUpMessage").innerHTML = html;
+
         setTimeout(function() {document.getElementById("editPopUpMessage").innerHTML = ``}, 3000);
     }
 }
@@ -148,7 +151,7 @@ async function deletePaymentMethod(param)
         }
         else
         {
-            console.log("teste");
+            alert("Ocorreu um erro ao excluir método de pagamento. Tente novamente mais tarde ou contate o administrador.")
         }
     }
 }

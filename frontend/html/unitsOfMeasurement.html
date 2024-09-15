@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/menu.css">
     <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/paymentMethod.css">
+    <link rel="stylesheet" href="../css/unitsOfMeasurement.css">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,35 +27,31 @@
         </div>  
         <div class="content paymentMethodContainer">
             <div class="title">
-                <h1>Lista de Formas de Pagamento</h1>
+                <h1>Lista de Unidades de Medida</h1>
             </div>
             <div>
                 <div class="addMethodBtnContainer">
-                    <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Método</button>
+                    <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Unidade de Medida</button>
                 </div>
                 <div class="popup">
                     <div class="popup-content">
                         <div>
-                            <label class="formTitle">Adicionar Método de Pagamento</label>
+                            <label class="formTitle">Adicionar Unidade de Medida</label>
                             <div class="formInputContainer">
                                 <div class="form-floating mb-3 myForm">
-                                    <input type="text" class="form-control loginInputs" placeholder="Digite o nome" id="paymentName">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o nome da unidade de medida" id="unitName">
                                     <label for="floatingInput">Nome</label>
-                                  </div>
-                                  <div class="form-floating">
-                                    <input type="text" class="form-control loginInputs" placeholder="Digite o método" id="paymentMethod">
-                                    <label for="floatingPassword">Método</label>
-                                  </div>
-                                  <div class="form-floating">
-                                    <input type="text" class="form-control loginInputs" placeholder="Digite o tipo" id="paymentType">
-                                    <label for="floatingPassword">Tipo</label>
-                                  </div>
+                                </div>
+                                <div class="form-floating">
+                                    <input maxlength="3" type="text" class="form-control loginInputs" placeholder="Digite a abreviação da unidade de medida" id="unitAbbreviation">
+                                    <label for="floatingPassword">Abreviação</label>
+                                </div>
                             </div>
                             <div id="popUpMessage">
                                 
                             </div>
                             <div>
-                                <button onclick="addPaymentMethod();" class="btn btn-primary saveBtn" id="savePaymentMethodBtn">Salvar</button>
+                                <button onclick="addUnitOfMeasurement();" class="btn btn-primary saveBtn" id="saveUnitOfMeasurementBtn">Salvar</button>
                             </div>
                             <div class="closeBtnContainer">
                                 <button onclick="closePopUps()" class="btn btn-primary closeBtn">Fechar</button>
@@ -66,26 +62,22 @@
                 <div class="popupEdit">
                     <div class="popup-contentEdit">
                         <div>
-                            <label class="formTitle">Editar Método de Pagamento</label>
+                            <label class="formTitle">Editar Unidade de Medida</label>
                             <div class="formInputContainer">
                                 <div class="form-floating mb-3 myForm">
-                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo nome" id="editPaymentName">
+                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo nome" id="editUnitName">
                                     <label for="floatingInput">Nome</label>
                                   </div>
                                   <div class="form-floating">
-                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo método" id="editPaymentMethod">
-                                    <label for="floatingPassword">Método</label>
-                                  </div>
-                                  <div class="form-floating">
-                                    <input type="text" class="form-control loginInputs" placeholder="Digite o novo tipo" id="editPaymentType">
-                                    <label for="floatingPassword">Tipo</label>
+                                    <input maxlength="3" type="text" class="form-control loginInputs" placeholder="Digite o novo método" id="editUnitAbbreviation">
+                                    <label for="floatingPassword">Abreviação</label>
                                   </div>
                             </div>
                             <div id="editPopUpMessage">
 
                             </div>
                             <div>
-                                <button onclick="editPaymentMethod();" class="btn btn-primary saveBtn">Salvar</button>
+                                <button onclick="editUnitOfMeasurement();" class="btn btn-primary saveBtn">Salvar</button>
                             </div>
                             <div class="closeBtnContainer">
                                 <button onclick="closePopUps()" class="btn btn-primary closeBtn">Cancelar</button>
@@ -99,18 +91,17 @@
                             <td style="width: 150px;">Ações</td>
                             <td>ID</td>
                             <td>Nome</td>
-                            <td>Método</td>
-                            <td>Tipo</td>
+                            <td>Abreviação</td>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody id="unitsOfMeasurementTableBody">
 
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <script src="../javascript/paymentMethodScreen.js"></script>
-    <script>listPaymentMethods()</script>
+    <script src="../javascript/unitsOfMeasurementScreen.js"></script>
+    <script>listUnitsOfMeasurement()</script>
 </body>
 </html>
