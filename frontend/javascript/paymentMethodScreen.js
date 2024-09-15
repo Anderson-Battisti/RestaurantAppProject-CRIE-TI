@@ -11,17 +11,17 @@ async function listPaymentMethods()
         for (let i = 0; i < paymentMethods.length; i++)
         {
             let paymentMethod = paymentMethods[i];
-            let editBtn = `<button onclick="openPopUpEdit(${i});" class="btn btn-primary listBtn">Editar</button>`;
-            let deleteBtn = `<button onclick="deletePaymentMethod(${i});" class="btn btn-primary listBtn">Excluir</button>`
+            let editBtn = `<button onclick="openPopUpEdit(${paymentMethod.id});" class="btn btn-primary listBtn">Editar</button>`;
+            let deleteBtn = `<button onclick="deletePaymentMethod(${paymentMethod.id});" class="btn btn-primary listBtn">Excluir</button>`
             if (paymentMethod != null)
             {
                 html += `<tr>
-                        <td class="buttons">${editBtn}${deleteBtn}</td>
-                        <td>${paymentMethod.id}</td>
-                        <td>${paymentMethod.name}</td>
-                        <td>${paymentMethod.method}</td>
-                        <td>${paymentMethod.type}</td>
-                        </tr>`;
+                            <td class="buttons">${editBtn}${deleteBtn}</td>
+                            <td>${paymentMethod.id}</td>
+                            <td>${paymentMethod.name}</td>
+                            <td>${paymentMethod.method}</td>
+                            <td>${paymentMethod.type}</td>
+                         </tr>`;
             } 
         }
         document.getElementById("tableBody").innerHTML = html;
@@ -56,7 +56,8 @@ async function addPaymentMethod()
     {
         let result = await fetch(apiUrl + "/addPaymentMethod", requestMethod);
         let resultJson = await result.json();
-        if (resultJson.id)
+        console.log(resultJson);
+        if (resultJson.name)
         {
             let html = `<p style="color: green; font-family: 'Poppins'">Sucesso!</p>`
             document.getElementById("popUpMessage").innerHTML = html;
@@ -125,8 +126,7 @@ async function editPaymentMethod()
     {
         let html = `<p style="color: red; font-family: 'Poppins'">Preencha todos os campos!</p>`
         document.getElementById("editPopUpMessage").innerHTML = html;
-
-        setTimeout(function(){document.getElementById("editPopUpMessage").innerHTML = ``}, 3000);
+        setTimeout(function() {document.getElementById("editPopUpMessage").innerHTML = ``}, 3000);
     }
 }
 
@@ -140,9 +140,8 @@ async function deletePaymentMethod(param)
     {
         let result = await fetch(apiUrl + url, method);
         let resultJson = await result.json();
-        console.log(resultJson);
 
-        if (resultJson.id)
+        if (resultJson.success == true)
         {
             alert("Método de pagamento excluído com sucesso.");
             listPaymentMethods();
@@ -195,11 +194,18 @@ function openPopUp()
     document.querySelector(".popup").style.display = "flex";
 }
 
-function openPopUpEdit(id)
+async function openPopUpEdit(id)
 {
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "paymentMethod.html?id=" + id);
-    document.getElementById("editPaymentName").value = "test";      
+    window.scrollTo(0, 0);
+
+    let result = await fetch(apiUrl + "/getPaymentMethodById/" + id);
+    let paymentMethods = await result.json();
+
+    document.getElementById("editPaymentName").value = paymentMethods[0].name;
+    document.getElementById("editPaymentMethod").value = paymentMethods[0].method;
+    document.getElementById("editPaymentType").value = paymentMethods[0].type;      
 }
 
 function closePopUps()

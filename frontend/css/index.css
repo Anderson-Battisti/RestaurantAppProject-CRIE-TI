@@ -39,7 +39,7 @@ body
 
 .failedLoginMessage
 {
-    display: none;
+    visibility: hidden;
     color: var(--red);
     font-family: 'Poppins';
     font-size: 13px;

@@ -30,12 +30,7 @@ async function logIn(event)
     }
     else
     {
-        showFailedLoginMessage();
+        document.querySelector(".failedLoginMessage").style.visibility = "visible"
+        setTimeout(function() {document.querySelector(".failedLoginMessage").style.visibility = "hidden"}, 1000);
     }
-}
-
-function showFailedLoginMessage()
-{
-    document.querySelector(".failedLoginMessage").style.display = "flex"
-    setTimeout(function() {document.querySelector(".failedLoginMessage").style.display = "none"}, 1000);
 }
