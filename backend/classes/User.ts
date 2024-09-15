@@ -1,4 +1,4 @@
-export class Login
+export class User
 {
     login : string = "";
     password : string = "";

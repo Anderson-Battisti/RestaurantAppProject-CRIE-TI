@@ -14,7 +14,7 @@ body
 {
     background-color: var(--white-color);
     width: 400px;
-    height: 280px;
+    height: 300px;
     padding-left: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
@@ -35,6 +35,15 @@ body
 {
     border-radius: 2px;
     background-color: var(--lighter-gray);
+}
+
+.failedLoginMessage
+{
+    display: none;
+    color: var(--red);
+    font-family: 'Poppins';
+    font-size: 13px;
+    padding-top: 5px;
 }
 
 .form-control::placeholder

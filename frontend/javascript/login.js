@@ -2,10 +2,10 @@ const apiUrl = "http://localhost:4000";
 
 async function logIn(event)
 {
+    event.preventDefault();
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
-    event.preventDefault();
 
     const login = JSON.stringify
     ({
@@ -28,4 +28,14 @@ async function logIn(event)
     {
         window.location = "inicio.html";
     }
+    else
+    {
+        showFailedLoginMessage();
+    }
+}
+
+function showFailedLoginMessage()
+{
+    document.querySelector(".failedLoginMessage").style.display = "flex"
+    setTimeout(function() {document.querySelector(".failedLoginMessage").style.display = "none"}, 1000);
 }

@@ -198,7 +198,8 @@ function openPopUp()
 function openPopUpEdit(id)
 {
     document.querySelector(".popupEdit").style.display = "flex";
-    window.history.pushState(null, '', "paymentMethod.html?id=" + id);      
+    window.history.pushState(null, '', "paymentMethod.html?id=" + id);
+    document.getElementById("editPaymentName").value = "test";      
 }
 
 function closePopUps()

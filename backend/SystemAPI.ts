@@ -1,8 +1,8 @@
-import { Login } from "./classes/Login";
+import { User } from "./classes/User";
 import { PaymentMethod } from "./classes/PaymentMethod";
 import express, {Express, Request, Response} from "express";
 import cors from "cors";
-import { ExitStatus, resolveModuleName } from "typescript";
+import { client, dbQuery } from "./database";
 
 let server: Express = express();
 const serverPort = 4000;
@@ -10,7 +10,7 @@ const serverPort = 4000;
 server.use(cors());
 server.use(express.json());
 
-let registeredUsers: Login[] = [];
+let registeredUsers: User[] = [];
 registeredUsers[0] = {login : "admin", password : "admin"};
 
 let paymentMethods: PaymentMethod[] = [];
@@ -18,19 +18,21 @@ let contId: number = 1;
 
 server.post("/checkLogin", async function(req: Request, res: Response): Promise<Response> //Login API
 {
-    let login = req.body.login;
-    let password = req.body.password;
+    let user = new User ();
+    user.login = req.body.login.trim();
+    user.password = req.body.password.trim();
 
-    for (let i = 0; i < registeredUsers.length; i++)
+    let sql = `select * from users where username = $1 and password = crypt($2, password);`;
+    let result = await dbQuery(sql, [user.login, user.password]);
+    
+    if (result.length > 0)
     {
-        let registeredLogin: Login = registeredUsers[i];
-
-        if (login.trim() == registeredLogin.login && password.trim() == registeredLogin.password)
-        {
-            return res.status(200).json({success: true, message: "Usuário e senha batem. Login efetuado com sucesso!"});
-        }
+        return res.status(200).json({success: true, message: "Usuário e senha batem. Login efetuado com sucesso!"});
     }
-    return res.status(401).json({success: false, message: "Usuário ou senha incorretos. Falha ao efetuar login"});
+    else
+    {
+        return res.status(401).json({success: false, message: "Usuário ou senha incorretos. Falha ao efetuar login"});
+    }   
 });
 
 server.get("/getPaymentMethodsList", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
