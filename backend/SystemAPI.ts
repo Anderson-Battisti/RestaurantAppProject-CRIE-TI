@@ -1,6 +1,6 @@
-import { User } from "./classes/User";
-import { PaymentMethod } from "./classes/PaymentMethod";
-import { UnitOfMeasurement } from "./classes/UnitOfMeasurement";
+import { User } from "./modules/User";
+import { PaymentMethod } from "./modules/PaymentMethod";
+import { UnitOfMeasurement } from "./modules/UnitOfMeasurement";
 import express, {Express, Request, Response} from "express";
 import cors from "cors";
 import { client, dbQuery } from "./database";
@@ -68,7 +68,7 @@ server.post("/addPaymentMethod", async function(req: Request, res: Response): Pr
     paymentMethod.method = req.body.method.trim();
     paymentMethod.type = req.body.type.trim();
 
-    if (validRequisition(paymentMethod))
+    if (paymentMethod.validRequisition())
     {
         let sql = `insert into payment_methods (name, method, type) values ($1, $2, $3);`   
         let result = await dbQuery(sql, [paymentMethod.name, paymentMethod.method, paymentMethod.type]);
@@ -88,7 +88,7 @@ server.put("/editPaymentMethod", async function (req: Request, res: Response): P
     paymentMethod.method = req.body.method;
     paymentMethod.type = req.body.type;
 
-    if (validRequisition(paymentMethod))
+    if (paymentMethod.validRequisition())
     {
         let sql = `update payment_methods set name = $1, method = $2, type = $3 where id = $4;`
         let result = dbQuery(sql, [paymentMethod.name, paymentMethod.method, paymentMethod.type, id]);
@@ -154,7 +154,7 @@ server.post("/addUnitOfMeasurement", async function(req: Request, res: Response)
     unitOfMeasurement.name = req.body.name;
     unitOfMeasurement.abbreviation = req.body.abbreviation;
 
-    if (validUnitOfMeasurement(unitOfMeasurement))
+    if (unitOfMeasurement.validUnitOfMeasurement())
     {
         let sql = `insert into units_of_measurement (name, abbreviation) values ($1, $2);`;
         let result = await dbQuery(sql, [unitOfMeasurement.name, unitOfMeasurement.abbreviation]);
@@ -181,7 +181,7 @@ server.put("/editUnitOfMeasurement", async function (req: Request, res: Response
     unitOfMeasurement.name = req.body.name;
     unitOfMeasurement.abbreviation = req.body.abbreviation;
 
-    if (validUnitOfMeasurement(unitOfMeasurement))
+    if (unitOfMeasurement.validUnitOfMeasurement())
     {
         let sql = `update units_of_measurement set name = $1, abbreviation = $2 where id = $3;`
         let result = dbQuery(sql, [unitOfMeasurement.name, unitOfMeasurement.abbreviation, id]);
@@ -208,34 +208,6 @@ server.delete("/deleteUnitOfMeasurement/:id", async function(req: Request, res: 
         return res.status(404).json({"codigo": id, success: false, "message": "Ocorreu um erro ao excluir. Unidade de medida não encontrada."});
     }
 });
-
-function validRequisition(paymentMethod:PaymentMethod)
-{
-    if (paymentMethod.name != null && paymentMethod.name != undefined && paymentMethod.name != "" &&
-        paymentMethod.method != null && paymentMethod.method != undefined && paymentMethod.method != "" &&
-        paymentMethod.type != null && paymentMethod.type != undefined && paymentMethod.type != "")
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-function validUnitOfMeasurement(unitOfMeasurement:UnitOfMeasurement)
-{
-    if (unitOfMeasurement.name != null && unitOfMeasurement.name != undefined && unitOfMeasurement.name != "" &&
-        unitOfMeasurement.abbreviation != null && unitOfMeasurement.abbreviation != undefined && unitOfMeasurement.abbreviation != ""
-    )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
 
 server.listen(serverPort, () =>
 {

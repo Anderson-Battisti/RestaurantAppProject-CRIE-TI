@@ -202,7 +202,7 @@ async function openPopUpEdit(id)
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "paymentMethod.html?id=" + id);
     window.scrollTo(0, 0);
-
+    
     let result = await fetch(apiUrl + "/getPaymentMethodById/" + id);
     let paymentMethods = await result.json();
 
