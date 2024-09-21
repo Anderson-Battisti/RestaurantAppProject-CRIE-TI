@@ -17,7 +17,7 @@ server.post("/checkLogin", async function(req: Request, res: Response): Promise<
     user.login = req.body.login.trim();
     user.password = req.body.password.trim();
 
-    let sql = `select * from users where username = $1 and password = crypt($2, password);`;
+    let sql = `select * from login where username = $1 and password = crypt($2, password);`;
     let result = await dbQuery(sql, [user.login, user.password]);
     
     if (result.rows.length > 0)
