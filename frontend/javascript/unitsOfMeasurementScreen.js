@@ -1,10 +1,23 @@
-const apiUrl = "http://localhost:4000";
+const urlApi = "http://localhost:4000";
+
+function buildHeaders()
+{
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("user", localStorage.getItem("user"));
+    myHeaders.append("password", localStorage.getItem("password"));
+
+    return myHeaders;
+}       
 
 async function listUnitsOfMeasurement()
 {
-    let result = await fetch(apiUrl + "/getUnitsOfMeasurementList");
+    let result = await fetch(urlApi + "/getUnitsOfMeasurementList", {headers: buildHeaders()});
+    if (userIsNotLogged(result)) return;
+    
     let listOfUnitsOfMeasurement = await result.json();
     let html = "";
+
     if (listOfUnitsOfMeasurement.length > 0)
     {
         for (let i = 0; i < listOfUnitsOfMeasurement.length; i++)
@@ -30,9 +43,6 @@ async function listUnitsOfMeasurement()
 
 async function addUnitOfMeasurement()
 {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
     const reqBody = JSON.stringify
     ({
         name: document.getElementById("unitName").value.trim(),
@@ -42,14 +52,16 @@ async function addUnitOfMeasurement()
     const requestMethod = 
     {
         method: "POST",
-        headers: myHeaders,
+        headers: buildHeaders(),
         body: reqBody,
         redirect: "follow"
     };
 
     if (filledFields())
     {
-        let result = await fetch(apiUrl + "/addUnitOfMeasurement", requestMethod);
+        let result = await fetch(urlApi + "/addUnitOfMeasurement", requestMethod);
+        if (userIsNotLogged(result)) return;
+        
         let resultJson = await result.json();
 
         if (resultJson.success == true)
@@ -78,9 +90,6 @@ async function addUnitOfMeasurement()
 
 async function editUnitOfMeasurement()
 {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
     let id = getUrlParams("id");
 
     const requestBody = JSON.stringify 
@@ -93,14 +102,16 @@ async function editUnitOfMeasurement()
     const requestOptions = 
     {
         method : "PUT",
-        headers : myHeaders,
+        headers : buildHeaders(),
         body : requestBody,
         redirect : "follow"
     };
 
     if (editFilledFields())
     {
-        let result = await fetch(apiUrl + "/editUnitOfMeasurement", requestOptions);
+        let result = await fetch(urlApi + "/editUnitOfMeasurement", requestOptions);
+        if (userIsNotLogged(result)) return;
+        
         let resultJson = await result.json();
 
         if (resultJson.success)
@@ -128,11 +139,13 @@ async function deleteUnitOfMeasurement(param)
     {
         let id = param;
         const url = "/deleteUnitOfMeasurement/" + param;
-        const method = {method: "DELETE", redirect: "follow"};
+        const method = {method: "DELETE", redirect: "follow", headers: buildHeaders()};
 
         if (confirm("Deseja realmente excluir essa unidade de medida?"))
         {
-            let result = await fetch(apiUrl + url, method);
+            let result = await fetch(urlApi + url, method);
+            if (userIsNotLogged(result)) return;
+            
             let resultJson = await result.json();
 
             if (resultJson.success == true)
@@ -140,7 +153,7 @@ async function deleteUnitOfMeasurement(param)
                 alert("Método de pagamento excluído com sucesso.");
                 listUnitsOfMeasurement();
             }
-            else
+            else if (result.status != 401)
             {
                 alert("Ocorreu um erro ao excluir método de pagamento. Tente novamente mais tarde ou contate o administrador");
             }
@@ -170,11 +183,13 @@ function openPopUp()
 
 async function openEditUnitsOfMeasurementsPopUp(id)
 {
+    let result = await fetch(urlApi + "/getUnitsOfMeasurementListById/" + id, {headers: buildHeaders()});
+    if (userIsNotLogged(result)) return;
+
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "unitsOfMeasurement.html?id=" + id);
-    window.scrollTo(0, 0);
-
-    let result = await fetch(apiUrl + "/getUnitsOfMeasurementListById/" + id);
+    window.scrollTo(0, 0);  
+    
     let unitOfMeasurements = await result.json();
 
     document.getElementById("editUnitName").value = unitOfMeasurements[0].name;
@@ -214,4 +229,15 @@ function getUrlParams(id)
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     return urlParams.get(id);
+}
+
+function userIsNotLogged(result)
+{
+    if (result.status === 401)
+    {
+        alert("Falha na autenticação, faça login e tente novamente!");
+        window.location = "index.html";
+        return true;
+    }
+    return false;
 }

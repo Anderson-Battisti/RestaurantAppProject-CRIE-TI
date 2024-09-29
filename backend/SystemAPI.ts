@@ -1,7 +1,7 @@
 import { User } from "./modules/User";
 import { PaymentMethod } from "./modules/PaymentMethod";
 import { UnitOfMeasurement } from "./modules/UnitOfMeasurement";
-import express, {Express, Request, Response} from "express";
+import express, {Express, NextFunction, Request, Response} from "express";
 import cors from "cors";
 import { client, dbQuery } from "./database";
 
@@ -11,23 +11,25 @@ const serverPort = 4000;
 server.use(cors());
 server.use(express.json());
 
-server.post("/checkLogin", async function(req: Request, res: Response): Promise<Response> //Login API
+server.use(async (req: Request, res: Response, next: NextFunction) =>
 {
-    let user = new User ();
-    user.login = req.body.login.trim();
-    user.password = req.body.password.trim();
+    let user = req.get("user");
+    let password = req.get("password");
+    let sql = `select * from users where username = $1 and password = crypt($2, password) and active = true;`
+    let result = await dbQuery(sql, [user, password]);
 
-    let sql = `select * from login where username = $1 and password = crypt($2, password);`;
-    let result = await dbQuery(sql, [user.login, user.password]);
-    
     if (result.rows.length > 0)
     {
-        return res.status(200).json({success: true, message: "Usuário e senha batem. Login efetuado com sucesso!"});
+        next();
+        return;
     }
-    else
-    {
-        return res.status(401).json({success: false, message: "Usuário ou senha incorretos. Falha ao efetuar login"});
-    }   
+ 
+    return res.status(401).json({"error": "Falha na autenticação!"});
+});
+
+server.get("/checkLogin", async function(req: Request, res: Response): Promise<Response> //Login API
+{
+    return res.status(200).json({success: true, message: "Usuário e senha batem. Login efetuado com sucesso!"});   
 });
 
 server.get("/getPaymentMethodsList", async function(req: Request, res: Response): Promise<Response> //PaymentAPI

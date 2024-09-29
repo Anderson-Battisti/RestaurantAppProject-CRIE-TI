@@ -23,7 +23,7 @@
             <a href="unitsOfMeasurement.html">Gerenciar Unidades de Medida</a>
             <a href="#">Gerenciar Usuários</a>
             <a href="#">Gerenciar Cadastro de Clientes</a>
-            <a href="index.html" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
+            <a href="#" style="display: flex; align-items: center; gap: 15px;" onclick="resetAuthentication()"><i class="fa-solid fa-right-from-bracket"></i>Sair</a>
         </div>  
         <div class="content paymentMethodContainer">
             <div class="title">
@@ -110,8 +110,9 @@
             </div>
         </div>
     </div>
-    <script src="../javascript/paymentMethodScreen.js"></script>
-    <script>listPaymentMethods()</script>
+    <script src="../javascript/paymentMethodScreen.js"></script> 
     <script src="https://kit.fontawesome.com/926475f891.js" crossorigin="anonymous"></script>
+    <script src="../javascript/login.js" defer></script>
+    <script>listPaymentMethods()</script>
 </body>
 </html>

@@ -1,8 +1,20 @@
-const apiUrl = "http://localhost:4000";
+const urlApi = "http://localhost:4000";
+
+function buildHeaders()
+{
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("user", localStorage.getItem("user"));
+    myHeaders.append("password", localStorage.getItem("password"));
+
+    return myHeaders;
+}
 
 async function listPaymentMethods()
 {
-    let result = await fetch(apiUrl + "/getPaymentMethodsList");
+    let result = await fetch(urlApi + "/getPaymentMethodsList", {headers: buildHeaders()});
+    if (userIsNotLogged(result)) return;
+    
     let paymentMethods = await result.json();
     let html = "";
 
@@ -34,9 +46,6 @@ async function listPaymentMethods()
 
 async function addPaymentMethod()
 {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
     const reqBody = JSON.stringify
     ({
         name: document.getElementById("paymentName").value,
@@ -47,14 +56,16 @@ async function addPaymentMethod()
     const requestMethod = 
     {
         method: "POST",
-        headers: myHeaders,
+        headers: buildHeaders(),
         body: reqBody,
         redirect: "follow"
     };
 
     if (filledFields())
     {
-        let result = await fetch(apiUrl + "/addPaymentMethod", requestMethod);
+        let result = await fetch(urlApi + "/addPaymentMethod", requestMethod);
+        if (userIsNotLogged(result)) return;
+
         let resultJson = await result.json();
 
         if (resultJson.name)
@@ -84,9 +95,6 @@ async function addPaymentMethod()
 
 async function editPaymentMethod()
 {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
     let id = getUrlParams("id");
 
     const requestBody = JSON.stringify 
@@ -100,14 +108,16 @@ async function editPaymentMethod()
     const requestOptions = 
     {
         method : "PUT",
-        headers : myHeaders,
+        headers : buildHeaders(),
         body : requestBody,
         redirect : "follow"
     };
 
     if (editFilledFields())
     {
-        let result = await fetch(apiUrl + "/editPaymentMethod", requestOptions);
+        let result = await fetch(urlApi + "/editPaymentMethod", requestOptions);
+        if (userIsNotLogged(result)) return;
+
         let resultJson = await result.json();
 
         if (resultJson.success)
@@ -137,11 +147,13 @@ async function deletePaymentMethod(param)
 {
     let id = param;
     const url = "/deletePaymentMethod/" + param;
-    const method = {method: "DELETE", redirect: "follow"};
+    const method = {method: "DELETE", redirect: "follow", headers: buildHeaders()};
 
     if (confirm("Deseja realmente excluir esse método de pagamento?"))
     {
-        let result = await fetch(apiUrl + url, method);
+        let result = await fetch(urlApi + url, method);
+        if (userIsNotLogged(result)) return;
+        
         let resultJson = await result.json();
 
         if (resultJson.success == true)
@@ -149,7 +161,7 @@ async function deletePaymentMethod(param)
             alert("Método de pagamento excluído com sucesso.");
             listPaymentMethods();
         }
-        else
+        else if (result.status != 401)
         {
             alert("Ocorreu um erro ao excluir método de pagamento. Tente novamente mais tarde ou contate o administrador.")
         }
@@ -199,12 +211,14 @@ function openPopUp()
 
 async function openPopUpEdit(id)
 {
+    let result = await fetch(urlApi + "/getPaymentMethodById/" + id, {headers: buildHeaders()});
+    if (userIsNotLogged(result)) return;
+
+    let paymentMethods = await result.json();
+
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "paymentMethod.html?id=" + id);
     window.scrollTo(0, 0);
-    
-    let result = await fetch(apiUrl + "/getPaymentMethodById/" + id);
-    let paymentMethods = await result.json();
 
     document.getElementById("editPaymentName").value = paymentMethods[0].name;
     document.getElementById("editPaymentMethod").value = paymentMethods[0].method;
@@ -230,5 +244,16 @@ function getUrlParams(id)
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     return urlParams.get(id);
+}
+
+function userIsNotLogged(result)
+{
+    if (result.status === 401)
+    {
+        alert("Falha na autenticação, faça login e tente novamente!");
+        window.location = "index.html";
+        return true;
+    }
+    return false;
 }
 
