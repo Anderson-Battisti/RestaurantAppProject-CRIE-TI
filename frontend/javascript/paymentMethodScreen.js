@@ -1,15 +1,5 @@
 const urlApi = "http://localhost:4000";
 
-function buildHeaders()
-{
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("user", localStorage.getItem("user"));
-    myHeaders.append("password", localStorage.getItem("password"));
-
-    return myHeaders;
-}
-
 async function listPaymentMethods()
 {
     let result = await fetch(urlApi + "/getPaymentMethodsList", {headers: buildHeaders()});
@@ -238,22 +228,3 @@ function closePopUps()
     document.getElementById("editPaymentMethod").value = ``,
     document.getElementById("editPaymentType").value = ``
 }
-
-function getUrlParams(id)
-{
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    return urlParams.get(id);
-}
-
-function userIsNotLogged(result)
-{
-    if (result.status === 401)
-    {
-        alert("Falha na autenticação, faça login e tente novamente!");
-        window.location = "index.html";
-        return true;
-    }
-    return false;
-}
-

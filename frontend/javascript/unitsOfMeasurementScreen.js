@@ -1,14 +1,4 @@
-const urlApi = "http://localhost:4000";
-
-function buildHeaders()
-{
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("user", localStorage.getItem("user"));
-    myHeaders.append("password", localStorage.getItem("password"));
-
-    return myHeaders;
-}       
+const urlApi = "http://localhost:4000";     
 
 async function listUnitsOfMeasurement()
 {
@@ -222,22 +212,4 @@ function editFilledFields()
     {
         return false;
     }
-}
-
-function getUrlParams(id)
-{
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    return urlParams.get(id);
-}
-
-function userIsNotLogged(result)
-{
-    if (result.status === 401)
-    {
-        alert("Falha na autenticação, faça login e tente novamente!");
-        window.location = "index.html";
-        return true;
-    }
-    return false;
 }

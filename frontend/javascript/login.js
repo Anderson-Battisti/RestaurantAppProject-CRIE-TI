@@ -5,7 +5,6 @@ let password = localStorage.getItem("password");
 
 async function checkLogin()
 {
-    console.log("teste");
     let success = await catchLogin(user, password);
     
     if (!success)
@@ -20,7 +19,7 @@ async function catchLogin(user, password)
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("user", user);
     myHeaders.append("password", password);
-
+    
     const options = 
     {
         method: "GET",
@@ -70,6 +69,17 @@ async function logIn(event)
         document.querySelector(".failedLoginMessage").style.visibility = "visible"
         setTimeout(function() {document.querySelector(".failedLoginMessage").style.visibility = "hidden"}, 1000);
     }
+}
+
+function userIsNotLogged(result)
+{
+    if (result.status === 401)
+    {
+        alert("Falha na autenticação, faça login e tente novamente!");
+        window.location = "index.html";
+        return true;
+    }
+    return false;
 }
 
 function resetAuthentication()
