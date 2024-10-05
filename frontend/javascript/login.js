@@ -1,11 +1,10 @@
 const apiUrl = "http://localhost:4000";
 
-let user = localStorage.getItem("user");
-let password = localStorage.getItem("password");
+let authorization = localStorage.getItem("Authorization");
 
 async function checkLogin()
 {
-    let success = await catchLogin(user, password);
+    let success = await catchLogin(base64);
     
     if (!success)
     {
@@ -13,12 +12,11 @@ async function checkLogin()
     }
 }
 
-async function catchLogin(user, password)
+async function catchLogin(base64)
 {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("user", user);
-    myHeaders.append("password", password);
+    myHeaders.append("Authorization", base64);
     
     const options = 
     {
@@ -53,20 +51,19 @@ async function logIn(event)
 {
     event.preventDefault();
 
-    let user = document.getElementById("loginEmailField").value;
+    let username = document.getElementById("loginEmailField").value;
     let password = document.getElementById("loginPasswordField").value;
-
-    let success = await catchLogin(user, password);
+    let base64 = "Basic " + btoa(username + ":" + password);
+    let success = await catchLogin(base64);
 
     if (success)
     {
         window.location = "inicio.html";
-        localStorage.setItem("user", user);
-        localStorage.setItem("password", password);
+        localStorage.setItem("Authorization", base64);
     }
     else
     {
-        document.querySelector(".failedLoginMessage").style.visibility = "visible"
+        document.querySelector(".failedLoginMessage").style.visibility = "visible";
         setTimeout(function() {document.querySelector(".failedLoginMessage").style.visibility = "hidden"}, 1000);
     }
 }
@@ -84,7 +81,6 @@ function userIsNotLogged(result)
 
 function resetAuthentication()
 {
-    localStorage.removeItem("user");
-    localStorage.removeItem("password");
+    localStorage.removeItem("Authorization");
     window.location = "index.html";
 }

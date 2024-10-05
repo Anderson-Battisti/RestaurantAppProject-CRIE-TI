@@ -2,8 +2,7 @@ function buildHeaders()
 {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("user", localStorage.getItem("user"));
-    myHeaders.append("password", localStorage.getItem("password"));
+    myHeaders.append("Authorization", localStorage.getItem("Authorization"));
 
     return myHeaders;
 }
@@ -17,9 +16,11 @@ function getUrlParams(id)
 
 function isAdm()
 {
-    let currentUser = localStorage.getItem("user");
-    console.log(currentUser);
-    if (currentUser === 'admin')
+    let authorization = localStorage.getItem("Authorization")?.replace("Basic ", "");    
+    let decodedAuthorization = atob(authorization);
+    let splittedDecodedAuthorization = decodedAuthorization.split(":");
+    
+    if (splittedDecodedAuthorization[0] === 'admin')
     {
         return true;
     }
