@@ -57,6 +57,8 @@
 .addMethodBtnContainer
 {
     padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .addMethodBtn
@@ -75,6 +77,28 @@
 }
 
 .addMethodBtn:focus
+{
+    background-color: var(--white-color);
+    color: var(--black);
+    box-shadow: none;
+}
+
+.downloadCsvBtn
+{
+    background-color: var(--dark-yellow);
+    color: var(--black);
+    border-radius: 3px;
+    font-family: 'Poppins';
+    border: none;
+}
+
+.downloadCsvBtn:hover
+{
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.downloadCsvBtn:focus
 {
     background-color: var(--white-color);
     color: var(--black);

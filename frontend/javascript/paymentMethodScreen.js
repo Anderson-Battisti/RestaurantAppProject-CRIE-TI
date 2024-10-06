@@ -228,3 +228,4 @@ function closePopUps()
     document.getElementById("editPaymentMethod").value = ``,
     document.getElementById("editPaymentType").value = ``
 }
+
