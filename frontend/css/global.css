@@ -1,0 +1,35 @@
+.btnContainer
+{
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px;
+}
+
+.emailContainer
+{
+    display: flex; 
+    gap: 4px; 
+    justify-content: end;
+}
+
+.emailInput
+{
+    border-radius: 5px; 
+    width: 300px; 
+    background-color: darkgrey;
+}
+
+.generatePdfBtn
+{
+    display: flex; 
+    justify-content: end;
+}
+
+.addBtnContainer
+{
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+

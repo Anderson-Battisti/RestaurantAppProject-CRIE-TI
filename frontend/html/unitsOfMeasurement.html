@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/menu.css">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/paymentMethod.css"
@@ -31,9 +32,18 @@
                 <h1>Lista de Unidades de Medida</h1>
             </div>
             <div>
-                <div class="addMethodBtnContainer">
-                    <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Unidade de Medida</button>
-                    <button onclick="downloadCSV(id)" class="btn btn-primary downloadCsvBtn" id="unitsOfMeasurementFullListCsvBtn">Baixar CSV</button>
+                <div class="btnContainer">
+                    <div class="emailContainer">
+                        <input class="emailInput" placeholder="seuemail@gmail.com" id="paymentMethodEmailInput">
+                        <button onclick="getCSV(id)" class="btn btn-primary addMethodBtn" id="unitsOfMeasurementSendEmailButton">Enviar Email</button>
+                    </div>
+                    <div class="generatePdfBtn">
+                        <button onclick="gerarPdf()" class="btn btn-primary addMethodBtn">Gerar PDF</button>
+                    </div>
+                    <div class="addBtnContainer">
+                        <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Unidade de Medida</button>
+                        <button onclick="getCSV(id)" class="btn btn-primary downloadCsvBtn" id="unitsOfMeasurementFullListCsvBtn">Baixar CSV</button>
+                    </div>        
                 </div>
                 <div class="popup">
                     <div class="popup-content">

@@ -30,11 +30,11 @@ function isAdm()
     }
 }
 
-async function downloadCSV(id)
+async function getCSV(id)
 {
     let csv;
 
-    if (id === "paymentMethodFullListCsvBtn")
+    if (id === "paymentMethodFullListCsvBtn" || id === "paymentMethodSendEmailButton")
     {
         let result = await fetch(urlApi + "/getPaymentMethodsList", {headers: buildHeaders()});
         if (userIsNotLogged(result)) return;
@@ -54,12 +54,13 @@ async function downloadCSV(id)
         }
         else
         {
-            alert("Não há métodos de pagamento cadastrados para baixar.");
+            alert("Não há métodos de pagamento cadastrados disponíveis para baixar");
             return;
-        }   
+        }
+        id === "paymentMethodFullListCsvBtn" ? downloadCSV(csv, id) : sendEmail(csv, id);  
     }
 
-    else if (id === "unitsOfMeasurementFullListCsvBtn")
+    else if (id === "unitsOfMeasurementFullListCsvBtn" || id === "unitsOfMeasurementSendEmailButton")
     {
         let result = await fetch(urlApi + "/getUnitsOfMeasurementList", {headers: buildHeaders()});
         if (userIsNotLogged(result)) return;
@@ -80,10 +81,11 @@ async function downloadCSV(id)
         {
             alert("Não há unidades de medida cadastradas para baixar.");
             return;
-        }    
+        }
+        id === "unitsOfMeasurementFullListCsvBtn" ? downloadCSV(csv, id) : sendEmail(csv, id);
     }
 
-    else if (id === "usersFullListCsvBtn")
+    else if (id === "usersFullListCsvBtn" || id === "userManagementSendEmailButton")
     {
         let result = await fetch(urlApi + "/getUsersList", {headers: buildHeaders()});
         if (userIsNotLogged(result)) return;
@@ -98,7 +100,7 @@ async function downloadCSV(id)
             {
                 let user = users[i];
                 let active;
-                user.active == true ? active = "Yes" : active = "No";
+                user.active == true ? active = "Sim" : active = "Não";
 
                 csv += '"' + user.id + '","' + user.username + '","' + active + '"\r\n';
             }
@@ -107,9 +109,13 @@ async function downloadCSV(id)
         {
             alert("Não há usuários cadastrados para baixar.");
             return;
-        }     
-    }
+        }
+        id === "usersFullListCsvBtn" ? downloadCSV(csv, id) : sendEmail(csv, id);    
+    } 
+}
 
+function downloadCSV(csv, id)
+{
     const csvData = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
     const downloadLink = document.createElement("a");
     downloadLink.href = csvData;
@@ -120,5 +126,61 @@ async function downloadCSV(id)
     id === "usersFullListCsvBtn" ? fileName = "usersFullList.csv" : null;
 
     downloadLink.download = fileName;
-    downloadLink.click();  
+    downloadLink.click();
+}
+
+async function sendEmail(csv, id)
+{
+    let email = document.getElementById("userManagementEmailInput").value;
+
+    if (email)
+    {
+        const reqBody = JSON.stringify
+        ({
+            csv: csv,
+            id: id,
+            email: email
+        });
+
+        const requestMethod = 
+        {
+            method: "POST",
+            headers: buildHeaders(),
+            body: reqBody,
+            redirect: "follow"
+        };
+
+        let result = await fetch(urlApi + "/sendEmail", requestMethod);
+        if (userIsNotLogged(result)) return;
+        let resultJson = await result.json();
+
+        if (resultJson.success === true)
+        {
+            alert("E-mail enviado com sucesso.");
+        }
+        else
+        {
+            alert("Ocorreu um erro ao enviar e-mail");
+        }
+    }
+    else
+    {
+        alert("Para enviar a lista, informe um e-mail");
+    }
+}
+
+async function gerarPdf()
+{
+    const result = await fetch(urlApi + "/generatePdf", {headers: buildHeaders()});
+    
+    const pdfData = await result.arrayBuffer();
+
+    const blob = new Blob([pdfData], {type: "application/pdf"});
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "teste.pdf";
+    link.click();
 }
