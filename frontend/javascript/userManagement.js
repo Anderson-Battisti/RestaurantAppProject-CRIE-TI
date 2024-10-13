@@ -14,7 +14,7 @@ async function listAllUsers()
         {
             let user = users[i];
             let editBtn = `<button onclick="openPopUpEdit(${user.id});" class="btn btn-primary listBtn">Editar</button>`;
-            let deleteBtn = `<button onclick="deletePaymentMethod(${user.id});" class="btn btn-primary listBtn">Excluir</button>`
+            let deleteBtn = `<button onclick="deleteUser(${user.id});" class="btn btn-primary listBtn">Excluir</button>`
             
             if (user != null)
             {
@@ -154,6 +154,36 @@ async function editUser()
 
         setTimeout(function() {document.getElementById("editPopUpMessage").innerHTML = ``}, 3000);  
     }
+}
+
+async function deleteUser(id)
+{
+    const requestBody = JSON.stringify({id: id});
+    const options = {method: "DELETE", redirect: "follow", headers: buildHeaders(), body: requestBody};
+
+    if (isAdm())
+    {
+        if (confirm("Deseja realmente excluír esse usuário?"))
+        {
+            let result = await fetch(urlApi + "/deleteUser", options);
+            if (userIsNotLogged(result)) return;
+            let resultJson = await result.json();
+    
+            if (resultJson.success === true)
+            {
+                alert("Usuário excluído com sucesso!");
+                listAllUsers();
+            }
+            else
+            {
+                alert("Ocorreu um erro ao excluir o usuário. Tente novamente mais tarde ou contate o administrador.");
+            }
+        }
+    }
+    else
+    {
+        alert("Somente administradores podem excluir usuários!");
+    }   
 }
 
 function openPopUp() 

@@ -292,6 +292,37 @@ server.put("/updateUser", async (req: Request, res: Response): Promise<Response>
     }
 });
 
+server.delete("/deleteUser", async (req: Request, res: Response): Promise<Response> =>
+{
+    let id = req.body.id;
+    let sql = `delete from users where id = $1;`;
+
+    if (id)
+    {
+        try
+        {
+            let result = await dbQuery(sql, [id]);
+
+            if (result.rowCount != null)
+            {
+                return res.status(200).json({success: true, message: "Usuário deletado com sucesso!"});
+            }
+            else
+            {
+                return res.status(404).json({success: false, message: "Ocorreu um erro ao excluir. Usuário não encontrado no banco de dados."});
+            }
+        }
+        catch (error)
+        {
+            return res.status(500).json({success: false, message: "Ocorreu um erro ao tentar buscar dados no banco de dados. Internal server error"});
+        }    
+    }
+    else
+    {
+        return res.status(400).json({success: false, error: "Não foi possível processar a exclusão. O parâmetro Id está faltando na requisição!"});
+    }
+});
+
 server.post("/sendEmail", async (req: Request, res: Response): Promise <Response> =>
 {
     if (req.body.id && req.body.csv && req.body.email)
@@ -304,7 +335,7 @@ server.post("/sendEmail", async (req: Request, res: Response): Promise <Response
                 user: "MS_bobcEJ@trial-yzkq340drqkld796.mlsender.net",
                 pass: "yoWlRmW3whrtv8wR"
             }
-        }
+        };
 
         let listName = ""
         let fileName = "";

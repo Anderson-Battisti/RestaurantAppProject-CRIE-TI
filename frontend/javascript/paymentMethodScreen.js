@@ -135,7 +135,6 @@ async function editPaymentMethod()
 
 async function deletePaymentMethod(param)
 {
-    let id = param;
     const url = "/deletePaymentMethod/" + param;
     const method = {method: "DELETE", redirect: "follow", headers: buildHeaders()};
 
@@ -143,7 +142,6 @@ async function deletePaymentMethod(param)
     {
         let result = await fetch(urlApi + url, method);
         if (userIsNotLogged(result)) return;
-        
         let resultJson = await result.json();
 
         if (resultJson.success == true)
