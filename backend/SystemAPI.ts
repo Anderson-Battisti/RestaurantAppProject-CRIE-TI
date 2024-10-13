@@ -387,12 +387,12 @@ server.get("/generatePdf", async (req: Request, res: Response): Promise<Response
     let result = await dbQuery(sql);
 
     let html = `
-                <table>
+                <table style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td>ID</td>
-                        <td>Nome</td>
-                        <td>Método</td>
-                        <td>Tipo</td>
+                        <td style="border: 1px solid black; padding: 8px; text-align: left;">ID</td>
+                        <td style="border: 1px solid black; padding: 8px; text-align: left;">Nome</td>
+                        <td style="border: 1px solid black; padding: 8px; text-align: left;">Método</td>
+                        <td style="border: 1px solid black; padding: 8px; text-align: left;">Tipo</td>
                     </tr>`;
 
     for (let i = 0; i < result.rows.length; i++)
@@ -400,10 +400,10 @@ server.get("/generatePdf", async (req: Request, res: Response): Promise<Response
         let paymentMethod = result.rows[i];
 
         html += `<tr>
-                    <td>${paymentMethod.id}</td>
-                    <td>${paymentMethod.name}</td>
-                    <td>${paymentMethod.method}</td>
-                    <td>${paymentMethod.type}</td>
+                    <td style="border: 1px solid black; padding: 8px; text-align: left;">${paymentMethod.id}</td>
+                    <td style="border: 1px solid black; padding: 8px; text-align: left;">${paymentMethod.name}</td>
+                    <td style="border: 1px solid black; padding: 8px; text-align: left;">${paymentMethod.method}</td>
+                    <td style="border: 1px solid black; padding: 8px; text-align: left;">${paymentMethod.type}</td>
                  </tr>`
     }
 
@@ -419,8 +419,12 @@ server.get("/generatePdf", async (req: Request, res: Response): Promise<Response
     await page.close();
     await browser.close();
 
-    res.contentType("application/pdf");
-    return res.send(pdfBuffer);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="paymentMethods.pdf"');
+    res.setHeader('Content-Length', pdfBuffer.length.toString());
+
+    res.end(pdfBuffer);
+    return res.status(200);
 });
 
 server.listen(serverPort, () =>

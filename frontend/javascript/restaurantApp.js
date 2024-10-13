@@ -131,7 +131,10 @@ function downloadCSV(csv, id)
 
 async function sendEmail(csv, id)
 {
-    let email = document.getElementById("userManagementEmailInput").value;
+    let email;
+    id === "paymentMethodSendEmailButton" ? email = document.getElementById("paymentMethodEmailInput").value :
+    id === "unitsOfMeasurementSendEmailButton" ? email = document.getElementById("unitsOfMeasurementEmailInput").value :
+    id === "userManagementSendEmailButton" ? email = document.getElementById("userManagementEmailInput").value : null;
 
     if (email)
     {
@@ -169,18 +172,17 @@ async function sendEmail(csv, id)
     }
 }
 
-async function gerarPdf()
+async function generatePdf()
 {
     const result = await fetch(urlApi + "/generatePdf", {headers: buildHeaders()});
-    
     const pdfData = await result.arrayBuffer();
 
     const blob = new Blob([pdfData], {type: "application/pdf"});
-
     const url = window.URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = "teste.pdf";
+    link.download = "Lista de Formas de Pagamento.pdf";
+    document.body.appendChild(link);
     link.click();
 }
