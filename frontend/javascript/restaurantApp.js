@@ -172,9 +172,22 @@ async function sendEmail(csv, id)
     }
 }
 
-async function generatePdf()
+async function generatePdf(id)
 {
-    const result = await fetch(urlApi + "/generatePdf", {headers: buildHeaders()});
+    let filename = "";
+    id === "paymentMethodsPdfBtn" ? filename = "Formas de Pagamento.pdf" :
+    id === "unitsOfMeasurementPdfBtn" ? filename = "Unidades de Medida.pdf" :
+    id === "usersManagementPdfBtn" ? filename = "Usuarios.pdf" : null;
+
+    const options = 
+    {
+        method: "POST", 
+        body: JSON.stringify({id: id}), 
+        redirect: "follow", 
+        headers: buildHeaders()
+    };
+
+    const result = await fetch(urlApi + "/generatePdf", options);
     const pdfData = await result.arrayBuffer();
 
     const blob = new Blob([pdfData], {type: "application/pdf"});
@@ -182,7 +195,7 @@ async function generatePdf()
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = "Lista de Formas de Pagamento.pdf";
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
 }
