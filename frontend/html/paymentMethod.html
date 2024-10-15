@@ -32,17 +32,31 @@
             </div>
             <div>
                 <div class="btnContainer">
-                    <div class="emailContainer">
-                        <input class="emailInput" placeholder="seuemail@gmail.com" id="paymentMethodEmailInput">
-                        <button onclick="getCSV(id)" class="btn btn-primary addMethodBtn" id="paymentMethodSendEmailButton">Enviar Email</button>
+
+                    <div class="leftButtonsContainer">
+                        <div class="leftButtons">
+                            <div>
+                                <button onclick="openPopUp()" class="btn btn-primary button addButton">Adicionar Método</button>
+                            </div>
+                            <div>
+                                <input class="findInput" placeholder="Digite para filtrar lista...">
+                            </div>     
+                        </div>            
                     </div>
-                    <div class="generatePdfBtn">
-                        <button onclick="generatePdf(id)" class="btn btn-primary addMethodBtn" id="paymentMethodsPdfBtn">Gerar PDF</button>
+
+                    <div class="rightButtonsContainer">
+                        <div class="rightButtons">
+                            <button onclick="generatePdf(id)" class="btn btn-primary button" id="paymentMethodsPdfBtn">Gerar PDF</button>
+                        </div>
+                        <div class="rightButtons">
+                            <button onclick="getCSV(id)" class="btn btn-primary button" id="paymentMethodFullListCsvBtn">Baixar CSV</button>
+                        </div>
+                        <div class="emailContainer">
+                            <input class="emailInput" placeholder="seuemail@gmail.com" id="paymentMethodEmailInput">
+                            <button onclick="getCSV(id)" class="btn btn-primary button" id="paymentMethodSendEmailButton">Enviar Email</button>
+                        </div>
                     </div>
-                    <div class="addBtnContainer">
-                        <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Método</button>
-                        <button onclick="getCSV(id)" class="btn btn-primary downloadCsvBtn" id="paymentMethodFullListCsvBtn">Baixar CSV</button>
-                    </div>
+                    
                 </div>              
                 <div class="popup">
                     <div class="popup-content">

@@ -33,17 +33,31 @@
             </div>
             <div>
                 <div class="btnContainer">
-                    <div class="emailContainer">
-                        <input class="emailInput" placeholder="seuemail@gmail.com" id="unitsOfMeasurementEmailInput">
-                        <button onclick="getCSV(id)" class="btn btn-primary addMethodBtn" id="unitsOfMeasurementSendEmailButton">Enviar Email</button>
+
+                    <div class="leftButtonsContainer">
+                        <div class="leftButtons">
+                            <div>
+                                <button onclick="openPopUp()" class="btn btn-primary button addButton">Adicionar Unidade de Medida</button>
+                            </div>
+                            <div>
+                                <input class="findInput" placeholder="Digite para filtrar lista...">
+                            </div>     
+                        </div>            
                     </div>
-                    <div class="generatePdfBtn">
-                        <button onclick="generatePdf(id)" class="btn btn-primary addMethodBtn" id="unitsOfMeasurementPdfBtn">Gerar PDF</button>
+
+                    <div class="rightButtonsContainer">
+                        <div class="rightButtons">
+                            <button onclick="generatePdf(id)" class="btn btn-primary button" id="unitsOfMeasurementPdfBtn">Gerar PDF</button>
+                        </div>
+                        <div class="rightButtons">
+                            <button onclick="getCSV(id)" class="btn btn-primary button" id="unitsOfMeasurementFullListCsvBtn">Baixar CSV</button>
+                        </div>
+                        <div class="emailContainer">
+                            <input class="emailInput" placeholder="seuemail@gmail.com" id="unitsOfMeasurementEmailInput">
+                            <button onclick="getCSV(id)" class="btn btn-primary button" id="unitsOfMeasurementSendEmailButton">Enviar Email</button>
+                        </div>
                     </div>
-                    <div class="addBtnContainer">
-                        <button onclick="openPopUp()" class="btn btn-primary addMethodBtn">Adicionar Unidade de Medida</button>
-                        <button onclick="getCSV(id)" class="btn btn-primary downloadCsvBtn" id="unitsOfMeasurementFullListCsvBtn">Baixar CSV</button>
-                    </div>        
+                    
                 </div>
                 <div class="popup">
                     <div class="popup-content">
