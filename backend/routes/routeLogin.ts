@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { Request, Response, NextFunction } from "express";
-import { client, dbQuery } from '../database'; 
 import { User } from "../modules/User";
 
 export const routeLogin = Router();

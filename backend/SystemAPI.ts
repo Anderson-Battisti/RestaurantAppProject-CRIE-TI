@@ -1,6 +1,5 @@
-import express, {Express, NextFunction, Request, Response} from "express";
+import express, { Express } from "express";
 import cors from "cors";
-import { client, dbQuery } from "./database";
 import { routePayentMethods } from "./routes/routePaymentMethod";
 import { routeUnitsOfMeasurement } from "./routes/routeUnitsOfMeasurement";
 import { routeLogin } from "./routes/routeLogin";

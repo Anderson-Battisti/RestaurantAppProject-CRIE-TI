@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Request, Response, NextFunction } from "express";
-import { client, dbQuery } from '../database'; 
+import { Request, Response } from "express";
+import { dbQuery } from '../database'; 
 
 export const routeUsers = Router();
 
@@ -15,7 +15,7 @@ routeUsers.get("/getUsersList", async function(req: Request, res: Response): Pro
     }
     else
     {
-        return res.status(400).json({success: false, message: "Erro. Não há usuários cadastrados"})
+        return res.status(400).json({success: false, message: "Erro. Não há usuários cadastrados"});
     }
 });
 

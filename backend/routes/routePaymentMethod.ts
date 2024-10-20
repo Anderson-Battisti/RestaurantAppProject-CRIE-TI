@@ -1,18 +1,16 @@
 import { Router } from "express";
-import { Request, Response, NextFunction } from "express";
-import { client, dbQuery } from '../database'; 
+import { Request, Response } from "express";
 import { PaymentMethod } from "../modules/PaymentMethod";
 
 export const routePayentMethods = Router();
 
 routePayentMethods.get("/getPaymentMethodsList", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
 {
-    let sql = "select * from payment_methods order by id;"
-    let result = await dbQuery(sql);
-
-    if (result.rows.length > 0)
+    let databaseRows = await PaymentMethod.getPaymentMethodsList();
+    
+    if (databaseRows)
     {
-        return res.status(200).json(result.rows);
+        return res.status(200).json({success: true, databaseRows});
     }
     else
     {
@@ -22,13 +20,12 @@ routePayentMethods.get("/getPaymentMethodsList", async function(req: Request, re
 
 routePayentMethods.get("/getPaymentMethodById/:id", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
 {
-    let id = req.params.id;
-    let sql = "select * from payment_methods where id = $1;"
-    let result = await dbQuery(sql, [id]);
+    let id = Number(req.params.id);
+    let databaseRows = await PaymentMethod.getPaymentMethodById(id);
 
-    if (result.rows.length > 0)
+    if (databaseRows)
     {
-        return res.status(200).json(result.rows);
+        return res.status(200).json({success: true, databaseRows});
     }
     else
     {
@@ -45,9 +42,16 @@ routePayentMethods.post("/addPaymentMethod", async function(req: Request, res: R
 
     if (paymentMethod.validRequisition())
     {
-        let sql = `insert into payment_methods (name, method, type) values ($1, $2, $3);`   
-        let result = await dbQuery(sql, [paymentMethod.name, paymentMethod.method, paymentMethod.type]);
-        return res.status(200).json(paymentMethod);          
+        let successfulInsertion = await paymentMethod.addPaymentMethod();
+
+        if (successfulInsertion === true)
+        {
+            return res.status(200).json({success: true, paymentMethod});
+        }
+        else
+        {
+            return res.status(500).json({success: false, message: "Internal server error, ocorreu um erro ao gravar no banco de dados."});
+        }          
     }
     else
     {
@@ -65,9 +69,16 @@ routePayentMethods.put("/editPaymentMethod", async function (req: Request, res: 
 
     if (paymentMethod.validRequisition())
     {
-        let sql = `update payment_methods set name = $1, method = $2, type = $3 where id = $4;`
-        let result = dbQuery(sql, [paymentMethod.name, paymentMethod.method, paymentMethod.type, id]);
-        return res.status(200).json({success: true, message: "Método alterado com sucesso!"});
+        let editedSuccessfully = await paymentMethod.editPaymentMethod(id);
+
+        if (editedSuccessfully === true)
+        {
+            return res.status(200).json({success: true, message: "Método alterado com sucesso!"});
+        }
+        else
+        {
+            return res.status(500).json({success: false, message: "Internal server error, ocorreu um erro ao gravar no banco de dados."});
+        } 
     }
     else
     {
@@ -78,10 +89,9 @@ routePayentMethods.put("/editPaymentMethod", async function (req: Request, res: 
 routePayentMethods.delete("/deletePaymentMethod/:id", async function(req: Request, res: Response): Promise<Response>
 {
     let id = Number(req.params.id);
-    let sql = `delete from payment_methods where id = $1;`
-    let result = await dbQuery(sql, [id]);
+    let deletedSuccessfully = await PaymentMethod.deletePaymentMethod(id);
 
-    if (result.rowCount != null)
+    if (deletedSuccessfully)
     {
         return res.status(200).json({id: id, success: true, message: "Sucesso ao excluir método de pagamento."});
     }

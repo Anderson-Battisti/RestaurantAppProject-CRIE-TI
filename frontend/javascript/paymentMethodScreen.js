@@ -4,8 +4,9 @@ async function listPaymentMethods()
 {
     let result = await fetch(urlApi + "/getPaymentMethodsList", {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
-    
-    let paymentMethods = await result.json();
+    let resultJson = await result.json();
+    let paymentMethods = resultJson.databaseRows;
+
     let html = "";
 
     if (paymentMethods.length > 0)
@@ -58,7 +59,7 @@ async function addPaymentMethod()
 
         let resultJson = await result.json();
 
-        if (resultJson.name)
+        if (resultJson.success === true)
         {
             let html = `<p style="color: green; font-family: 'Poppins'">Sucesso!</p>`
             document.getElementById("popUpMessage").innerHTML = html;
@@ -202,7 +203,8 @@ async function openPopUpEdit(id)
     let result = await fetch(urlApi + "/getPaymentMethodById/" + id, {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
 
-    let paymentMethods = await result.json();
+    let resultJson = await result.json();
+    let paymentMethods = resultJson.databaseRows;
 
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "paymentMethod.html?id=" + id);
