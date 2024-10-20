@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import { client, dbQuery } from '../database'; 
+import { User } from "../modules/User";
 
 export const routeLogin = Router();
 
@@ -15,10 +16,9 @@ routeLogin.use(async (req: Request, res: Response, next: NextFunction) =>
             let username = loginSplitted[0];
             let password = loginSplitted[1];
     
-            let sql = `select * from users where username = $1 and password = crypt($2, password) and active = true;`
-            let result = await dbQuery(sql, [username, password]);
+            let successfulAuthentication = await User.authenticate(username, password);
     
-            if (result.rows.length > 0)
+            if (successfulAuthentication)
             {
                 next();
                 return;

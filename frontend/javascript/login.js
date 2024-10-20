@@ -2,16 +2,6 @@ const apiUrl = "http://localhost:4000";
 
 let authorization = localStorage.getItem("Authorization");
 
-async function checkLogin()
-{
-    let success = await catchLogin(base64);
-    
-    if (!success)
-    {
-        window.location = "index.html";
-    }
-}
-
 async function catchLogin(base64)
 {
     let myHeaders = new Headers();

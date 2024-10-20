@@ -188,6 +188,7 @@ async function generatePdf(id)
     };
 
     const result = await fetch(urlApi + "/generatePdf", options);
+    if (userIsNotLogged(result)) return;
     const pdfData = await result.arrayBuffer();
 
     const blob = new Blob([pdfData], {type: "application/pdf"});

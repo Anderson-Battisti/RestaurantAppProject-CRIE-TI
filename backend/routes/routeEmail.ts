@@ -12,7 +12,8 @@ routeEmail.post("/sendEmail", async (req: Request, res: Response): Promise <Resp
             {
                 host: "smtp.mailersend.net",
                 port: 587,
-                auth: {
+                auth: 
+                {
                     user: "MS_bobcEJ@trial-yzkq340drqkld796.mlsender.net",
                     pass: "yoWlRmW3whrtv8wR"
                 }
