@@ -1,38 +1,43 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { client, dbQuery } from '../database'; 
 import { UnitOfMeasurement } from "../modules/UnitOfMeasurement";
 
 export const routeUnitsOfMeasurement = Router();
 
 routeUnitsOfMeasurement.get("/getUnitsOfMeasurementList", async function(req: Request, res: Response): Promise<Response>
 {
-    let sql = `select * from units_of_measurement order by id;`
-    let result = await dbQuery(sql);
+    let databaseRows = await UnitOfMeasurement.getUnitsOfMeasurementList();
     
-    if (result.rows.length > 0)
+    if (databaseRows)
     {
-        return res.status(200).json(result.rows);
+        return res.status(200).json({success: true, databaseRows});
+    }
+    else if ("message" in databaseRows)
+    {
+        return res.status(404).json({success: false, message: "Não há unidades de medida cadastradas."});
     }
     else
     {
-        return res.status(200).json({success: false, message: "Não há unidades de medida cadastradas."})
+        return res.status(500).json({success: false, message: "Internal server error: ocorreu um erro ao solicitar informações no banco de dados."});
     }
 });
 
 routeUnitsOfMeasurement.get("/getUnitsOfMeasurementListById/:id", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
 {
-    let id = req.params.id;
-    let sql = "select * from units_of_measurement where id = $1;"
-    let result = await dbQuery(sql, [id]);
+    let id = Number(req.params.id);
+    let databaseRows = await UnitOfMeasurement.getUnitsOfMeasurementListById(id);
 
-    if (result.rows.length > 0)
+    if (databaseRows)
     {
-        return res.status(200).json(result.rows);
+        return res.status(200).json({success: true, databaseRows});
+    }
+    else if ("message" in databaseRows)
+    {
+        return res.status(404).json({success: false, message: "Não foram encontradas Unidades de Medida com esse ID."});
     }
     else
     {
-        return res.status(400).json({success: false, message: "Não foram encontradas Unidades de Medida com esse ID."});
+        return res.status(500).json({success: false, message: "Internal server error: ocorreu um erro ao solicitar informações no banco de dados."});
     }
 });
 
@@ -44,16 +49,15 @@ routeUnitsOfMeasurement.post("/addUnitOfMeasurement", async function(req: Reques
 
     if (unitOfMeasurement.validUnitOfMeasurement())
     {
-        let sql = `insert into units_of_measurement (name, abbreviation) values ($1, $2);`;
-        let result = await dbQuery(sql, [unitOfMeasurement.name, unitOfMeasurement.abbreviation]);
+        let addUnitOfMeasurementReturn = await unitOfMeasurement.addUnitOfMeasurement();
         
-        if (result.rowCount != null)
+        if (addUnitOfMeasurementReturn.success)
         {
             return res.status(200).json({success: true, unitOfMeasurement});
         }
         else
         {
-            return res.status(400).json({success: false, message: "Ocorreu um erro no banco de dados ao tentar inserir dados. Tente novamente ou contate o administrador"});
+            return res.status(500).json({success: false, message: "Internal server error: Ocorreu um erro no banco de dados ao tentar inserir dados. Tente novamente ou contate o administrador"});
         }
     }
     else
@@ -71,9 +75,20 @@ routeUnitsOfMeasurement.put("/editUnitOfMeasurement", async function (req: Reque
 
     if (unitOfMeasurement.validUnitOfMeasurement())
     {
-        let sql = `update units_of_measurement set name = $1, abbreviation = $2 where id = $3;`
-        let result = dbQuery(sql, [unitOfMeasurement.name, unitOfMeasurement.abbreviation, id]);
-        return res.status(200).json({success: true, message: "Unidade de medida alterada com sucesso!"});
+        let editUnitOfMeasurementReturn = await unitOfMeasurement.editUnitOfMeasurement(id);
+
+        if (editUnitOfMeasurementReturn.success)
+        {
+            return res.status(200).json({success: true, message: "Unidade de medida alterada com sucesso!"});
+        }
+        else if ("message" in editUnitOfMeasurementReturn)
+        {
+            return res.status(404).json({success: false, message: "Falha ao editar unidade de medida. Id não encontrado no banco de dados"});
+        }
+        else
+        {
+            return res.status(500).json({success: false, message: "Internal server error, ocorreu um erro ao gravar no banco de dados."});
+        }  
     }
     else
     {
@@ -84,15 +99,18 @@ routeUnitsOfMeasurement.put("/editUnitOfMeasurement", async function (req: Reque
 routeUnitsOfMeasurement.delete("/deleteUnitOfMeasurement/:id", async function(req: Request, res: Response): Promise<Response>
 {
     let id = Number(req.params.id);
-    let sql = `delete from units_of_measurement where id = $1;`
-    let result = await dbQuery(sql, [id]);
+    let deleteUnitOfMeasurementReturn = await UnitOfMeasurement.deleteUnitOfMeasurement(id);
 
-    if (result.rowCount != null)
+    if (deleteUnitOfMeasurementReturn.success)
     {
         return res.status(200).json({id: id, success: true, message: "Sucesso ao excluir unidade de medida."});
     }
-    else
+    else if ("message" in deleteUnitOfMeasurementReturn)
     {
         return res.status(404).json({"codigo": id, success: false, "message": "Ocorreu um erro ao excluir. Unidade de medida não encontrada."});
+    }
+    else
+    {
+        return res.status(500).json({success: false, message: "Internal server error: ocorreu um erro ao processar informações no banco de dados."});
     }
 });

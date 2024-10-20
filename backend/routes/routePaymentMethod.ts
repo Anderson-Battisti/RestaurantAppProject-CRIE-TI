@@ -12,9 +12,13 @@ routePayentMethods.get("/getPaymentMethodsList", async function(req: Request, re
     {
         return res.status(200).json({success: true, databaseRows});
     }
+    else if ("message" in databaseRows)
+    {
+        return res.status(404).json({success: false, message: "Não há métodos de pagamento cadastrados."});
+    }
     else
     {
-        return res.status(400).json({success: false, message: "Não há métodos cadastrados"});
+        return res.status(500).json({success: false, message: "Internal server error: ocorreu um erro ao solicitar informações no banco de dados."});
     }
 });
 
@@ -27,9 +31,13 @@ routePayentMethods.get("/getPaymentMethodById/:id", async function(req: Request,
     {
         return res.status(200).json({success: true, databaseRows});
     }
+    else if ("message" in databaseRows)
+    {
+        return res.status(404).json({success: false, message: "Não foram encontrados métodos de pagamento com esse ID."});
+    }
     else
     {
-        return res.status(400).json({success: false, message: "Não foram encontrados métodos de pagamento com esse ID."});
+        return res.status(500).json({success: false, message: "Internal server error: ocorreu um erro ao solicitar informações no banco de dados."});
     }
 });
 
@@ -42,9 +50,9 @@ routePayentMethods.post("/addPaymentMethod", async function(req: Request, res: R
 
     if (paymentMethod.validRequisition())
     {
-        let successfulInsertion = await paymentMethod.addPaymentMethod();
+        let addPaymentMethodReturn = await paymentMethod.addPaymentMethod();
 
-        if (successfulInsertion === true)
+        if (addPaymentMethodReturn.success)
         {
             return res.status(200).json({success: true, paymentMethod});
         }
@@ -69,34 +77,42 @@ routePayentMethods.put("/editPaymentMethod", async function (req: Request, res: 
 
     if (paymentMethod.validRequisition())
     {
-        let editedSuccessfully = await paymentMethod.editPaymentMethod(id);
+        let editPaymentMethodReturn = await paymentMethod.editPaymentMethod(id);
 
-        if (editedSuccessfully === true)
+        if (editPaymentMethodReturn)
         {
-            return res.status(200).json({success: true, message: "Método alterado com sucesso!"});
+            return res.status(200).json({success: true});
+        }
+        else if ("message" in editPaymentMethodReturn)
+        {
+            return res.status(404).json({success: false, message: "Falha ao editar método de pagamento. Id não encontrado no banco de dados"});
         }
         else
         {
             return res.status(500).json({success: false, message: "Internal server error, ocorreu um erro ao gravar no banco de dados."});
-        } 
+        }
     }
     else
     {
-        return res.status(400).json({success: false, message: "Falha ao alterar método. Preencha todos os campos."});
+        return res.status(400).json({success: false, message: "Falha ao alterar método de pagamento. Preencha todos os campos."});
     }  
 });
 
 routePayentMethods.delete("/deletePaymentMethod/:id", async function(req: Request, res: Response): Promise<Response>
 {
     let id = Number(req.params.id);
-    let deletedSuccessfully = await PaymentMethod.deletePaymentMethod(id);
+    let deletePaymentMethodReturn = await PaymentMethod.deletePaymentMethod(id);
 
-    if (deletedSuccessfully)
+    if (deletePaymentMethodReturn.success)
     {
         return res.status(200).json({id: id, success: true, message: "Sucesso ao excluir método de pagamento."});
     }
-    else
+    else if ("message" in deletePaymentMethodReturn)
     {
         return res.status(404).json({"codigo": id, success: false, "message": "Ocorreu um erro ao excluir. Método de pagamento não encontrado."});
+    }
+    else
+    {
+        return res.status(500).json({success: false, message: "Internal server error: ocorreu um erro ao processar informações no banco de dados."});
     }
 });

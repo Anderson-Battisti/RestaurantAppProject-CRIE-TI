@@ -4,8 +4,9 @@ async function listUnitsOfMeasurement()
 {
     let result = await fetch(urlApi + "/getUnitsOfMeasurementList", {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
-    
-    let listOfUnitsOfMeasurement = await result.json();
+    let resultJson = await result.json();
+
+    let listOfUnitsOfMeasurement = resultJson.databaseRows;
     let html = "";
 
     if (listOfUnitsOfMeasurement.length > 0)
@@ -175,12 +176,13 @@ async function openEditUnitsOfMeasurementsPopUp(id)
 {
     let result = await fetch(urlApi + "/getUnitsOfMeasurementListById/" + id, {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
+    let resultJson = await result.json();
 
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "unitsOfMeasurement.html?id=" + id);
     window.scrollTo(0, 0);  
     
-    let unitOfMeasurements = await result.json();
+    let unitOfMeasurements = resultJson.databaseRows;
 
     document.getElementById("editUnitName").value = unitOfMeasurements[0].name;
     document.getElementById("editUnitAbbreviation").value = unitOfMeasurements[0].abbreviation;   

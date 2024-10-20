@@ -23,7 +23,8 @@ export class PaymentMethod
 
     static async getPaymentMethodsList()
     {
-        let sql = "select * from payment_methods order by id;"
+        let sql = "select * from payment_methods order by id;";
+        
         try
         {
             let result = await dbQuery(sql);
@@ -34,18 +35,18 @@ export class PaymentMethod
             }
             else
             {
-                return null;
+                return {success: false, message: "Não há unidades de medida cadastradas."};
             }
         }
         catch (error)
         {
-            return {success: false, error: error.message};
+            return {success: false, error: (error as Error).message};
         }
     }
 
     static async getPaymentMethodById(id: number)
     {
-        let sql = "select * from payment_methods where id = $1;"
+        let sql = "select * from payment_methods where id = $1;";
 
         try
         {
@@ -57,18 +58,18 @@ export class PaymentMethod
             }
             else
             {
-                return null;
+                return {success: false, message: "Não foram encontradas métodos de pagamento com esse ID."};
             }
         }
         catch (error)
         {
-            return {success: false, error: error.message};
+            return {success: false, error: (error as Error).message};
         }  
     }
 
     async addPaymentMethod()
     {
-        let sql = `insert into payment_methods (name, method, type) values ($1, $2, $3) returning id;` 
+        let sql = `insert into payment_methods (name, method, type) values ($1, $2, $3) returning id;`;
         
         try
         {
@@ -76,22 +77,22 @@ export class PaymentMethod
 
             if (result.rows.length > 0)
             {
-                return true;
+                return {success: true};
             }
             else
             {
-                return false;
+                return {success: false, message: "Ocorreu um erro ao inserir dados no banco."};
             }
         }
         catch (error)
         {
-            return {success: false, error: error.message};
+            return {success: false, error: (error as Error).message};
         }           
     }
 
     async editPaymentMethod(id: number)
     {
-        let sql = `update payment_methods set name = $1, method = $2, type = $3 where id = $4;`
+        let sql = `update payment_methods set name = $1, method = $2, type = $3 where id = $4;`;
 
         try
         {
@@ -99,22 +100,22 @@ export class PaymentMethod
 
             if (result.rowCount != null)
             {
-                return true;
+                return {success: true};
             }
             else
             {
-                return false;
+                return {success: false, message: "Falha ao editar método de pagamento. Id não encontrado no banco de dados"};
             }
         }
         catch (error)
         {
-            return {success: false, error: error.message};
+            return {success: false, error: (error as Error).message};
         }    
     }
 
     static async deletePaymentMethod(id: number)
     {   
-        let sql = `delete from payment_methods where id = $1;`
+        let sql = `delete from payment_methods where id = $1;`;
 
         try
         {
@@ -122,16 +123,16 @@ export class PaymentMethod
 
             if (result.rowCount != null)
             {
-                return true;
+                return {id: id, success: true};
             }
             else
             {
-                return false;
+                return {success: false, message: "Ocorreu um erro ao excluir. Método de pagamento não encontrado."};
             }
         }
         catch (error)
         {
-            return {success: false, error: error.message};
+            return {success: false, error: (error as Error).message};
         }
     }
 }
