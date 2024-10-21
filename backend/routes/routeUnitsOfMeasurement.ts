@@ -8,7 +8,7 @@ routeUnitsOfMeasurement.get("/getUnitsOfMeasurementList", async function(req: Re
 {
     let databaseRows = await UnitOfMeasurement.getUnitsOfMeasurementList();
     
-    if (databaseRows)
+    if (databaseRows.data)
     {
         return res.status(200).json({success: true, databaseRows});
     }

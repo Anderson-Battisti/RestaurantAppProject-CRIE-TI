@@ -4,8 +4,10 @@ async function listAllUsers()
 {
     let result = await fetch(urlApi + "/getUsersList", {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
-    
-    let users = await result.json();
+    let resultJson = await result.json();
+
+    let users = resultJson.databaseRows.data;
+
     let html = "";
 
     if (users.length > 0)
@@ -211,7 +213,9 @@ async function openPopUpEdit(id)
         window.history.pushState(null, '', "userManagement.html?id=" + id);
         window.scrollTo(0, 0);
 
-        document.getElementById("usernameEdit").value = resultJson[0].username;
+        let data = resultJson.databaseRows.data;
+
+        document.getElementById("usernameEdit").value = data[0].username;
     }
     else
     {

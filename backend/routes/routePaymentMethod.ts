@@ -2,13 +2,13 @@ import { Router } from "express";
 import { Request, Response } from "express";
 import { PaymentMethod } from "../modules/PaymentMethod";
 
-export const routePayentMethods = Router();
+export const routePaymentMethods = Router();
 
-routePayentMethods.get("/getPaymentMethodsList", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
+routePaymentMethods.get("/getPaymentMethodsList", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
 {
     let databaseRows = await PaymentMethod.getPaymentMethodsList();
     
-    if (databaseRows)
+    if (databaseRows.data)
     {
         return res.status(200).json({success: true, databaseRows});
     }
@@ -22,12 +22,12 @@ routePayentMethods.get("/getPaymentMethodsList", async function(req: Request, re
     }
 });
 
-routePayentMethods.get("/getPaymentMethodById/:id", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
+routePaymentMethods.get("/getPaymentMethodById/:id", async function(req: Request, res: Response): Promise<Response> //PaymentAPI
 {
     let id = Number(req.params.id);
     let databaseRows = await PaymentMethod.getPaymentMethodById(id);
 
-    if (databaseRows)
+    if (databaseRows.data)
     {
         return res.status(200).json({success: true, databaseRows});
     }
@@ -41,7 +41,7 @@ routePayentMethods.get("/getPaymentMethodById/:id", async function(req: Request,
     }
 });
 
-routePayentMethods.post("/addPaymentMethod", async function(req: Request, res: Response): Promise<Response>
+routePaymentMethods.post("/addPaymentMethod", async function(req: Request, res: Response): Promise<Response>
 {
     let paymentMethod = new PaymentMethod();
     paymentMethod.name = req.body.name.trim();
@@ -67,7 +67,7 @@ routePayentMethods.post("/addPaymentMethod", async function(req: Request, res: R
     }   
 });
 
-routePayentMethods.put("/editPaymentMethod", async function (req: Request, res: Response): Promise<Response>
+routePaymentMethods.put("/editPaymentMethod", async function (req: Request, res: Response): Promise<Response>
 {
     let paymentMethod = new PaymentMethod();
     let id = req.body.id;
@@ -79,7 +79,7 @@ routePayentMethods.put("/editPaymentMethod", async function (req: Request, res: 
     {
         let editPaymentMethodReturn = await paymentMethod.editPaymentMethod(id);
 
-        if (editPaymentMethodReturn)
+        if (editPaymentMethodReturn.success)
         {
             return res.status(200).json({success: true});
         }
@@ -98,7 +98,7 @@ routePayentMethods.put("/editPaymentMethod", async function (req: Request, res: 
     }  
 });
 
-routePayentMethods.delete("/deletePaymentMethod/:id", async function(req: Request, res: Response): Promise<Response>
+routePaymentMethods.delete("/deletePaymentMethod/:id", async function(req: Request, res: Response): Promise<Response>
 {
     let id = Number(req.params.id);
     let deletePaymentMethodReturn = await PaymentMethod.deletePaymentMethod(id);

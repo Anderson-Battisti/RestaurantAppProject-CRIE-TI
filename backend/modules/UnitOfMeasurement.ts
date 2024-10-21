@@ -28,7 +28,7 @@ export class UnitOfMeasurement
     
             if (result.rows.length > 0)
             {
-                return result.rows;
+                return {success: true, data: result.rows};
             }
             else
             {

@@ -38,7 +38,8 @@ async function getCSV(id)
     {
         let result = await fetch(urlApi + "/getPaymentMethodsList", {headers: buildHeaders()});
         if (userIsNotLogged(result)) return;
-        let paymentMethods = await result.json(); 
+        let resultJson = await result.json(); 
+        let paymentMethods = resultJson.databaseRows.data;
 
         if (paymentMethods.length > 0)
         {
@@ -64,7 +65,8 @@ async function getCSV(id)
     {
         let result = await fetch(urlApi + "/getUnitsOfMeasurementList", {headers: buildHeaders()});
         if (userIsNotLogged(result)) return;
-        let unitsOfMeasurement = await result.json();
+        let resultJson = await result.json();
+        let unitsOfMeasurement = resultJson.databaseRows.data;
 
         if (unitsOfMeasurement.length > 0)
         {
@@ -89,7 +91,8 @@ async function getCSV(id)
     {
         let result = await fetch(urlApi + "/getUsersList", {headers: buildHeaders()});
         if (userIsNotLogged(result)) return;
-        let users = await result.json();
+        let resultJson = await result.json();
+        let users = resultJson.databaseRows.data;
 
         if (users.length > 0)
         {

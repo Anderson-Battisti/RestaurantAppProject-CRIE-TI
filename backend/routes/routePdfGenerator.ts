@@ -17,7 +17,7 @@ routePdfGenerator.post("/generatePdf", async (req: Request, res: Response): Prom
             {
                 try 
                 {
-                    let sql = `select * from payment_methods;`;
+                    let sql = `select * from payment_methods order by id;`;
                     let result = await dbQuery(sql);
                     filename = "Formas de Pagamento.pdf";
         
@@ -54,7 +54,7 @@ routePdfGenerator.post("/generatePdf", async (req: Request, res: Response): Prom
             {
                 try
                 {
-                    let sql = `select * from units_of_measurement;`;
+                    let sql = `select * from units_of_measurement order by id;`;
                     let result = await dbQuery(sql);
                     filename = "Unidades de Medida.pdf";
             
@@ -89,7 +89,7 @@ routePdfGenerator.post("/generatePdf", async (req: Request, res: Response): Prom
             {
                 try
                 {
-                    let sql = `select * from users;`;
+                    let sql = `select * from users order by id;`;
                     let result = await dbQuery(sql);
                     filename = "Usuarios.pdf";
             

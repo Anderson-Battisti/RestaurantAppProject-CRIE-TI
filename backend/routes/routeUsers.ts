@@ -1,33 +1,35 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { dbQuery } from '../database'; 
+import { User } from "../modules/User";
 
 export const routeUsers = Router();
 
 routeUsers.get("/getUsersList", async function(req: Request, res: Response): Promise<Response>
 {
-    let sql = `select id, username, active from users order by id;`;
-    let result = await dbQuery(sql);
+    let databaseRows = await User.getUsersList();
 
-    if (result.rows.length > 0)
+    if (databaseRows.data)
     {
-        return res.status(200).json(result.rows);
+        return res.status(200).json({success: true, databaseRows});
+    }
+    else if ("message" in databaseRows)
+    {
+        return res.status(404).json({success: false, message: "Erro. Não há usuários cadastrados"});
     }
     else
     {
-        return res.status(400).json({success: false, message: "Erro. Não há usuários cadastrados"});
+        return res.status(500).json({success: false, message: "Internal server error: Ocorreu um erro ao processar requisição no banco de dados"});
     }
 });
 
 routeUsers.get("/getUserById/:id", async (req: Request, res: Response): Promise<Response> =>
 {
-    let id = req.params.id;
-    let sql = "select * from users where id = $1;"
-    let result = await dbQuery(sql, [id]);
+    let id = Number(req.params.id);
+    let databaseRows = await User.getUserById(id);
 
-    if (result.rows.length > 0)
+    if (databaseRows.data)
     {
-        return res.status(200).json(result.rows);
+        return res.status(200).json({success: true, databaseRows});
     }
     else
     {
@@ -37,15 +39,15 @@ routeUsers.get("/getUserById/:id", async (req: Request, res: Response): Promise<
 
 routeUsers.post("/createUser", async (req: Request, res: Response): Promise<Response> =>
 {
-    let username = req.body.username;
-    let password = req.body.password;
+    let user = new User();
+    user.login = req.body.username;
+    user.password = req.body.password;
 
-    let sql = `insert into users (username, password, active) values ($1, crypt($2, gen_salt('bf')), true) returning id`;
-    let result = await dbQuery(sql, [username, password]);
+    let createUserReturn = await user.createUser();
     
-    if (result.rows[0].id)
+    if (createUserReturn.success)
     {
-        return res.status(200).json({success: true, message: "Usuário criado com sucesso."})
+        return res.status(200).json({success: true, message: "Usuário criado com sucesso."});
     }
     else
     {
@@ -55,14 +57,14 @@ routeUsers.post("/createUser", async (req: Request, res: Response): Promise<Resp
 
 routeUsers.put("/updateUser", async (req: Request, res: Response): Promise<Response> =>
 {
-    let username = req.body.username;
-    let password = req.body.password;
+    let user = new User();
+    user.login = req.body.username;
+    user.password = req.body.password;
     let id = req.body.id;
+    
+    let updateUserReturn = await user.updateUser(id);
 
-    let sql = `update users set username = $1, password = crypt($2, gen_salt('bf')), active = true where id = $3 returning id`;
-    let result = await dbQuery(sql, [username, password, id]);
-
-    if (result.rows[0].id)
+    if (updateUserReturn.success)
     {
         return res.status(200).json({success: true, message: "Usuário atualizado com sucesso!"});
     }
@@ -74,28 +76,24 @@ routeUsers.put("/updateUser", async (req: Request, res: Response): Promise<Respo
 
 routeUsers.delete("/deleteUser", async (req: Request, res: Response): Promise<Response> =>
 {
-    let id = req.body.id;
-    let sql = `delete from users where id = $1;`;
+    let id = Number(req.body.id);
 
     if (id)
     {
-        try
-        {
-            let result = await dbQuery(sql, [id]);
+        let deleteUserReturn = await User.deleteUser(id);
 
-            if (result.rowCount != null)
-            {
-                return res.status(200).json({success: true, message: "Usuário deletado com sucesso!"});
-            }
-            else
-            {
-                return res.status(404).json({success: false, message: "Ocorreu um erro ao excluir. Usuário não encontrado no banco de dados."});
-            }
+        if (deleteUserReturn.success)
+        {
+            return res.status(200).json({success: true, message: "Usuário deletado com sucesso!"});
         }
-        catch (error)
+        else if ("message" in deleteUserReturn)
+        {
+            return res.status(404).json({success: false, message: "Ocorreu um erro ao excluir. Usuário não encontrado no banco de dados."});
+        }
+        else
         {
             return res.status(500).json({success: false, message: "Ocorreu um erro ao tentar buscar dados no banco de dados. Internal server error"});
-        }    
+        }
     }
     else
     {

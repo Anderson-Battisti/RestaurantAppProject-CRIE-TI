@@ -31,7 +31,7 @@ export class PaymentMethod
 
             if (result.rows.length > 0)
             {
-                return result.rows;
+                return {success: true, data: result.rows};
             }
             else
             {
@@ -54,7 +54,7 @@ export class PaymentMethod
 
             if (result.rows.length > 0)
             {
-                return result.rows;
+                return {success: true, data: result.rows};
             }
             else
             {

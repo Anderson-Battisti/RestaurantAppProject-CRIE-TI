@@ -5,7 +5,8 @@ async function listPaymentMethods()
     let result = await fetch(urlApi + "/getPaymentMethodsList", {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
     let resultJson = await result.json();
-    let paymentMethods = resultJson.databaseRows;
+
+    let paymentMethods = resultJson.databaseRows.data;
 
     let html = "";
 
@@ -202,9 +203,9 @@ async function openPopUpEdit(id)
 {
     let result = await fetch(urlApi + "/getPaymentMethodById/" + id, {headers: buildHeaders()});
     if (userIsNotLogged(result)) return;
-
     let resultJson = await result.json();
-    let paymentMethods = resultJson.databaseRows;
+
+    let paymentMethods = resultJson.databaseRows.data;
 
     document.querySelector(".popupEdit").style.display = "flex";
     window.history.pushState(null, '', "paymentMethod.html?id=" + id);

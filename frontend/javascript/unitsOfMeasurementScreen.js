@@ -6,7 +6,8 @@ async function listUnitsOfMeasurement()
     if (userIsNotLogged(result)) return;
     let resultJson = await result.json();
 
-    let listOfUnitsOfMeasurement = resultJson.databaseRows;
+    let listOfUnitsOfMeasurement = resultJson.databaseRows.data;
+
     let html = "";
 
     if (listOfUnitsOfMeasurement.length > 0)
