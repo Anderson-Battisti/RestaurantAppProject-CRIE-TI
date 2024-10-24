@@ -1,6 +1,6 @@
 export class Email
 {
-    static defineListName(id: string)
+    static defineFileName(id: string)
     {
         let listName = "";
         let fileName = "";

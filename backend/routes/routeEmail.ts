@@ -9,8 +9,8 @@ routeEmail.post("/sendEmail", async (req: Request, res: Response): Promise <Resp
 {
     if (req.body.id && req.body.csv && req.body.email)
     {
-        let listName = Email.defineListName(req.body.id)[0];
-        let fileName = Email.defineListName(req.body.id)[1];
+        let listName = Email.defineFileName(req.body.id)[0];
+        let fileName = Email.defineFileName(req.body.id)[1];
 
         let mailOptions = Email.mailOptions(req.body.email, fileName, listName, req.body.csv);
         let emailConfig = Email.emailConfig();
