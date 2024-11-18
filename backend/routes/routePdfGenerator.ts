@@ -1,7 +1,7 @@
+import { Pdf } from "../functionalities/pdfGenerator";
 import { Router } from "express";
 import { Request, Response } from "express";
 import * as puppeteer from "puppeteer";
-import { Pdf } from "../functionalities/pdfGenerator";
 
 export const routePdfGenerator = Router();
 
@@ -43,7 +43,7 @@ routePdfGenerator.post("/generatePdf", async (req: Request, res: Response): Prom
         }
     
         res.status(500).json({sucess: false, message: "Internal error. Não foi possível buscar dados no banco de dados"});
-
+        return;
     }
     catch (error)
     {

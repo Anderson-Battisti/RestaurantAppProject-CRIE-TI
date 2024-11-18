@@ -36,4 +36,4 @@ routeEmail.post("/sendEmail", async (req: Request, res: Response): Promise <Resp
         return res.status(400).json({success: false, message: "A API não recebeu todos os campos necessários (ID, CSV ou Email destinatário)"}); 
     }
     return res.status(500);
-}); 
+});     

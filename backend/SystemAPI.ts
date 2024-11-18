@@ -1,5 +1,6 @@
-import express, { Express } from "express";
-import cors from "cors";
+import { Express } from "express";
+import * as express from "express";
+import * as cors from "cors";
 import { routePaymentMethods } from "./routes/routePaymentMethod";
 import { routeUnitsOfMeasurement } from "./routes/routeUnitsOfMeasurement";
 import { routeLogin } from "./routes/routeLogin";

@@ -1,0 +1,11 @@
+{
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "allowSyntheticDefaultImports": true
+    }
+  },
+  "compilerOptions": {
+    "module": "esnext"
+  }
+}
